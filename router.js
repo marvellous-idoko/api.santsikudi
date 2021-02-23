@@ -15,22 +15,23 @@ router.post('/ussd', (req, res) => {
                 1. English
                 2. Hausa`
             res.send(response);
-            break;
-        }
+
+        } break;
         case 1:
         case '1': {
             let response = `END Thanks for choosing English ${phoneNumber}`
-            break;
-        }
+
+        } break;
         case 2:
         case '2': {
             let response = `END Thanks for choosing Hausa ${phoneNumber}`
-            break;
-        }
+
+        } break;
 
         default: {
-            break;
-        }
+            let response = `END Error ${phoneNumber}`
+        } break;
+
     }
 })
 
