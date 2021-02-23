@@ -35,6 +35,7 @@ router.post('/ussd', (req, res) => {
             res.send(response);
             break;
         }
+        case 2*1:
         case '2*1': {
             let response = `CON Enter Your details in this format
             Fulname : Business Address : State where business is located : Business Name : No. of Employees : Secret code
