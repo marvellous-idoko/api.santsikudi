@@ -151,7 +151,17 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     catch (err) {
         res.json(err)
     }
-})
+}).get('/chAcct/:account_no',(req,res)=>{
+    console.info(req.params.account_no)
+    try {
+        userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
+            if (e) throw "accouont doesn't exist on santsii kudi"
+            res.json({code:1,name:r['fullName'],contact:r['contact']})
+        })  
+    }
+    catch (err) {
+        res.json({code:0,msg:err})
+    }})
 
 router.post('/register', (req, res, next) => {
     let u = new userSchema({
@@ -179,9 +189,25 @@ router.post('/register', (req, res, next) => {
         res.json('an error occured while registering')
     }
 })
-var user = null;
+var user = []
+
+// function add(arr, name) {
+//     const { length } = arr;
+//     const id = length + 1;
+//     const found = arr.some(el => el.username === name);
+//     if (!found) arr.push({ id, username: name });
+//     return arr;
+//   }
+
+  function userExists(account_no) {
+    return user.some(function(el) {
+      return el.account_no === account_no;
+    }); 
+  }
+  
+
 router.post('/login', (req, res) => {
-    // user = req.body;
+    console.log(req.body);
     try {
         userSchema.findOne({ account_no: req.body['id'] }, function (e, r) {
             if (e) return console.info(e);
@@ -189,7 +215,10 @@ router.post('/login', (req, res) => {
             else {
                 if (r['password'] == req.body['pwd']) {
                     res.json({ code: 1, msg: 'successfully signed in' })
-                    user = r
+                    if(userExists(r['account_no'] ===true )){
+                        user.push(r);
+                    }
+                    console.log(user)
                 } else res.json({ code: 0, msg: 'wrong password' })
             }
         })
