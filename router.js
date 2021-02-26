@@ -11,7 +11,8 @@ var session = require('express-session');
 
 // import schemas here
 const userSchema = require('./schemas/user')
-const deposit = require('./schemas/deposits')
+const deposit = require('./schemas/deposits');
+const { findOne } = require("./schemas/user");
 
 router.use(cookieParser());
 router.use(session({
@@ -89,12 +90,12 @@ router.post('/ussd', (req, res) => {
         }
     }
 })
-router.get('/chkLog', (req, res) => {
-    if (user != '' || null || undefined) res.json({ code: 1, user: user })
-    else res.json(0)
+router.get('/chkLog/:account_no', (req, res) => {
+    if (userExists(req.params.account_no === true)) {
+        var r = findOne({ account_no: req.params.account_no })
+        res.json({ code: 1, user: r })
+    } else res.json(0)
 })
-
-
 
 router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
     let t = new deposit({
@@ -112,7 +113,7 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
             console.info(uu)
             const p = await userSchema.findOne({ account_no: uu['account_noOfReceipient'] })
             p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(t['amountDeposited']))
-            p.save(async(e, s) => {
+            p.save(async (e, s) => {
                 if (e) res.json({ code: 0, msg: e.message, id: null })
             })
         })
@@ -122,7 +123,7 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
     }
 }).get('/retrCred/:account_no', (req, res) => {
     try {
-        deposit.find({ account_noOfReceipient:req.params.account_no }, (e, r) => {
+        deposit.find({ account_noOfReceipient: req.params.account_no }, (e, r) => {
             if (e) { r.json({ code: 0, error: e }); throw "unable to retrieve account history" }
             console.info(r)
             res.json(r)
@@ -151,17 +152,18 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     catch (err) {
         res.json(err)
     }
-}).get('/chAcct/:account_no',(req,res)=>{
+}).get('/chAcct/:account_no', (req, res) => {
     console.info(req.params.account_no)
     try {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
             if (e) throw "accouont doesn't exist on santsii kudi"
-            res.json({code:1,name:r['fullName'],contact:r['contact']})
-        })  
+            res.json({ code: 1, name: r['fullName'], contact: r['contact'] })
+        })
     }
     catch (err) {
-        res.json({code:0,msg:err})
-    }})
+        res.json({ code: 0, msg: err })
+    }
+})
 
 router.post('/register', (req, res, next) => {
     let u = new userSchema({
@@ -199,12 +201,12 @@ var user = []
 //     return arr;
 //   }
 
-  function userExists(account_no) {
-    return user.some(function(el) {
-      return el.account_no === account_no;
-    }); 
-  }
-  
+function userExists(account_no) {
+    return user.some(function (el) {
+        return el.account_no === account_no;
+    });
+}
+
 
 router.post('/login', (req, res) => {
     console.log(req.body);
@@ -214,8 +216,8 @@ router.post('/login', (req, res) => {
             else if (r == null) res.json({ code: 0, msg: "wrong account number" })
             else {
                 if (r['password'] == req.body['pwd']) {
-                    res.json({ code: 1, msg: 'successfully signed in' })
-                    if(userExists(r['account_no'] ===true )){
+                    res.json({ code: 1, msg: 'successfully signed in', user: r })
+                    if (userExists(r['account_no'] === true)) {
                         user.push(r);
                     }
                     console.log(user)
