@@ -167,7 +167,7 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
 
 router.post('/register', (req, res, next) => {
     let u = new userSchema({
-        account_no: Math.floor(Math.random() * 1000000000),
+        account_no: Math.floor(Math.random() * 10000000000),
         state: req.body.state,
         address: req.body.address,
         acctType: req.body.type,
@@ -180,12 +180,11 @@ router.post('/register', (req, res, next) => {
         acctBalance: 0,
         bvn: ''
     });
-
     try {
         u.save((err, ukk) => {
             if (err) res.json({ code: 0, msg: err.message, id: null })
             console.info(ukk)
-            res.json({ code: 1, msg: "successfully registered", id: ukk['account_no'] })
+            res.json({ code: 1, msg: "successfully registered", user: ukk })
         })
     } catch (a) {
         res.json('an error occured while registering')
