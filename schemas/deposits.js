@@ -23,7 +23,7 @@ const trancsaction = mongoose.Schema({
     },
     nameOfReceipient:{
         type: String,
-        required:true
+        required:true 
     },
     refNo:{
         type: String,

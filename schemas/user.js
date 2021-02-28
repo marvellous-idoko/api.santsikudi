@@ -33,6 +33,10 @@ const user = mongoose.Schema({
         type: String,
         required: true
     },
+    abtBiz: {
+        type: String,
+        required: true
+    },
     account_no: {
         type: String,   
         required: true

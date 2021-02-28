@@ -146,10 +146,12 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     try {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
             if (e) throw "unable to retrieve accouont balance"
+           console.info(r['acctBalance'])
             res.json(r['acctBalance'])
         })
     }
     catch (err) {
+        console.info(err)
         res.json(err)
     }
 }).get('/chAcct/:account_no', (req, res) => {
@@ -163,6 +165,12 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     catch (err) {
         res.json({ code: 0, msg: err })
     }
+}).get('/logout/:account_no', async(req,res)=>{
+    console.info(user)
+    var p = await userSchema.findOne({account_no:req.params.account_no})
+    user.pop(p)
+    console.info(user)
+
 })
 
 router.post('/register', (req, res, next) => {
@@ -177,9 +185,10 @@ router.post('/register', (req, res, next) => {
         verified: false,
         dateOfRegistration: new Date(),
         contact: req.body.contact,
+        abtBiz: req.body.abtBiz,
         acctBalance: 0,
         bvn: ''
-    });
+    }); 
     try {
         u.save((err, ukk) => {
             if (err) res.json({ code: 0, msg: err.message, id: null })
