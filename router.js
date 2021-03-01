@@ -5,6 +5,7 @@ const util = require('util');
 const request = util.promisify(req);
 const axios = require('axios')
 const { sterling, nibss, union } = require("innovation-sandbox");
+const loan = require('./schemas/loan')
 const Email = require('smtp-server')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -25,6 +26,77 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
 const sandboxKey = '37de4935bccdfa335f59b3783a0368d0'
+router.post('/sms', (req, res) => {
+    apiKey = "1e4af632fde243b21fa1c28ee43fc71f3a84c6f89e6604f6b29d5afb9f328c65"
+
+})
+router.get('/verifyBVN/:bvn/:id', (req, res) => {
+   
+    nibss.Bvnr.VerifySingleBVN({
+        bvn: req.params.bvn,
+        sandbox_key: '37de4935bccdfa335f59b3783a0368d0',
+        organisation_code: '11111',
+        password: "^o'e6EXK5T ~^j2=",
+        ivkey: 'eRpKTBjdOq6T67D0',
+        aes_key: '9+CZaWqfyI/fwezX',
+        host: 'https://sandboxapi.fsi.ng'
+    }).then(async r => {
+       switch (r){
+        case undefined:{
+            const data = {
+                "ResponseCode": "00",
+                "BVN": "12345678901",
+                "FirstName": "Uchenna",
+                "MiddleName": "Chijioke",
+                "LastName": "Nwanyanwu",
+                "DateOfBirth": "22-Oct-1970",
+                "PhoneNumber": "07033333333",
+                "RegistrationDate": "16-Nov-2014",
+                "EnrollmentBank": "900",
+                "EnrollmentBranch": "Victoria Island",
+                "WatchListed": "NO"
+              }
+              const p  = await userSchema.findOne({account_no:req.params.id})
+            p.bvn =  data;
+            p.verified = true;
+            var ff = await p.save()
+            res.json(ff)
+            // res.json()
+        }default:{
+            var p  = await userSchema.findOne({account_no:req.params.id})
+            p.bvn =  r['data'];
+            p.verified = true;
+            var ff = await p.save()
+            res.json(ff)
+        }
+       }
+
+       })
+
+    }).get('/loanHis/:id', async(req,res)=>{
+        var k = await loan.find({acctId:req.params.id})
+        res.json(k)
+    }).get('/loans',async(req,res,next)=>{
+        var ds = await loan.find({})
+        console.info(ds)
+        res.json(ds)
+        return;
+    })
+router.post('/loan',async(req,res)=>{
+    var k = new loan({
+        reason:req.body.a.reason,
+        summary:req.body.a.summary,
+        intRate:req.body.a.type,
+        duration:req.body.a.duration,
+        amount:req.body.a.amount,
+        dateOfRequest: new Date(),
+        aboutBusiness: req.body.abtBiz,
+        acctId: req.body.acctId,
+        loanId:  Math.floor(Math.random() * 10000000000)
+    })
+    p = await k.save()
+    res.json(p)
+})
 router.post('/ussd', (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
@@ -146,7 +218,7 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     try {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
             if (e) throw "unable to retrieve accouont balance"
-           console.info(r['acctBalance'])
+            console.info(r['acctBalance'])
             res.json(r['acctBalance'])
         })
     }
@@ -165,9 +237,9 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     catch (err) {
         res.json({ code: 0, msg: err })
     }
-}).get('/logout/:account_no', async(req,res)=>{
+}).get('/logout/:account_no', async (req, res) => {
     console.info(user)
-    var p = await userSchema.findOne({account_no:req.params.account_no})
+    var p = await userSchema.findOne({ account_no: req.params.account_no })
     user.pop(p)
     console.info(user)
 
@@ -188,7 +260,7 @@ router.post('/register', (req, res, next) => {
         abtBiz: req.body.abtBiz,
         acctBalance: 0,
         bvn: ''
-    }); 
+    });
     try {
         u.save((err, ukk) => {
             if (err) res.json({ code: 0, msg: err.message, id: null })
@@ -214,7 +286,6 @@ function userExists(account_no) {
         return el.account_no === account_no;
     });
 }
-
 
 router.post('/login', (req, res) => {
     console.log(req.body);
@@ -266,76 +337,9 @@ router.post('/transferFunds', (req, res) => {
     }).catch(e => {
         console.info(e);
     })
+})
 
 
-    //     goat().then(async p => {
-    //         console.info(await p)
-    //     }).catch((e) => console.log(e));
-    //    async function goat() {
-    //             // optionos = 
-    //             data = {
-    //                 uri: "https://sandboxapi.fsi.ng/sterling/accountapi/api/Spay/InterbankTransferReq",
-    //                 method: 'POST',
-    //                 options: {
-    //                     headers: {
-    //                         'Sandbox-Key': sandboxKey,
-    //                         'Ocp-Apim-Subscription-Key': "t",
-    //                         'Ocp-Apim-Trace': 'true',
-    //                         Appid: "69",
-    //                         'Content-Type': 'application/json',
-    //                         ipval: "0",
-    //                     },
-    //                     body: {
-    //                         "Referenceid": "0101",
-    //                         "RequestType": "0101",
-    //                         "Translocation": "0101",
-    //                         "SessionID": "01",
-    //                         "FromAccount": "01",
-    //                         "ToAccount": "01",
-    //                         "Amount": "01",
-    //                         "DestinationBankCode": "01",
-    //                         "NEResponse": "01",
-    //                         "BenefiName": "01",
-    //                         "PaymentReference": "01",
-    //                         "OriginatorAccountName": "01",
-    //                         "translocation": "01"
-    //                     },
-    //                     json: true,
-    //                 }
-    //             }
-    //             return await (await request(data)).headers;
-    //         }
-    // axios({
-    // 	method: 'post',
-    // 	baseURL: 'https://sandboxapi.fsi.ng',
-    // 	url: '/sterling/accountapi/api/Spay/InterbankTransferReq',
-    // 	data: {
-    // 		Referenceid: "01",
-    // 		RequestType: "01",
-    // 		Translocation: "01",
-    // 		SessionID: "01",
-    // 		FromAccount: "01",
-    // 		ToAccount: "01",
-    // 		Amount: "01",
-    // 		DestinationBankCode: "01",
-    // 		NEResponse: "01",
-    // 		BenefiName: "01",
-    // 		PaymentReference: "01",
-    // 		OriginatorAccountName: "01",
-    // 		translocation: "01"
-    // 		},
-    // 	headers: {
-    // 		"Sandbox-Key": sandboxKey,
-    // 		"Ocp-Apim-Subscription-Key": "t",
-    // 		"Ocp-Apim-Trace": "true",
-    // 		"Appid": "69",
-    // 		"Content-Type": "application/json",
-    // 		"ipval": 0
-    // 		}
-    // 	})
-    // 	.then((response) => {console.log(response.data)})
-    // 	.catch((error) => console.log(error))
-});
 
 
 module.exports = router;

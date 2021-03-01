@@ -45,7 +45,7 @@ const user = mongoose.Schema({
         type: Boolean
     },
     bvn:{
-        type: Number,
+        type: {},
     },
     acctBalance:{
         type: Number,
