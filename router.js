@@ -9,7 +9,11 @@ const loan = require('./schemas/loan')
 const Email = require('smtp-server')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-
+const ATs = require('africastalking');
+const AT = ATs({
+    apiKey: '1e4af632fde243b21fa1c28ee43fc71f3a84c6f89e6604f6b29d5afb9f328c65', 
+    username: 'sandbox'
+  });
 // import schemas here
 const userSchema = require('./schemas/user')
 const deposit = require('./schemas/deposits');
@@ -28,7 +32,7 @@ router.use(express.urlencoded({ extended: true }));
 const sandboxKey = '37de4935bccdfa335f59b3783a0368d0'
 router.post('/sms', (req, res) => {
     apiKey = "1e4af632fde243b21fa1c28ee43fc71f3a84c6f89e6604f6b29d5afb9f328c65"
-
+    username = 'sandbox'
 })
 router.get('/verifyBVN/:bvn/:id', (req, res) => {
    
@@ -78,10 +82,11 @@ router.get('/verifyBVN/:bvn/:id', (req, res) => {
         res.json(k)
     }).get('/loans',async(req,res,next)=>{
         var ds = await loan.find({})
-        console.info(ds)
+        // console.info(ds)
         res.json(ds)
         return;
     })
+
 router.post('/loan',async(req,res)=>{
     var k = new loan({
         reason:req.body.a.reason,
@@ -96,6 +101,28 @@ router.post('/loan',async(req,res)=>{
     })
     p = await k.save()
     res.json(p)
+})
+router.post('/withdrawal',async(req,res)=>{
+    try {
+        const u = await userSchema.findOne({account_no:req.body.id})
+        if(u.acctBalance < parseInt(req.body.amt) ) {
+            res.json({code:00,msg:"insuficient funds"});
+            return;
+        }
+        u.acctBalance = Math.ceil(u.acctBalance - parseInt(req.body.amt));
+          
+        const result = await AT.SMS.send({
+          to: '+2347057537572', 
+          message: `Hello ${u.fullName} "\n" ${u.account_no} "\n" ${req.body.amt} was
+           withdrawn from your account. Thank you `,
+          from: 'Santsi Kudi'
+        });
+        console.log(result);
+        res.json({msg:'Successful withdrawal from your account , open the Africa'+ 
+        'Talking simuator to view your alert'},)
+    } catch(ex) {
+        console.error(ex);
+      } 
 })
 router.post('/ussd', (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
@@ -197,7 +224,6 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
     try {
         deposit.find({ account_noOfReceipient: req.params.account_no }, (e, r) => {
             if (e) { r.json({ code: 0, error: e }); throw "unable to retrieve account history" }
-            console.info(r)
             res.json(r)
         })
     } catch (e) {
@@ -206,7 +232,7 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
 })
 router.get('/retrDebit/:account_no', (req, res) => {
     try {
-        wittdraw.find({ account_no: req.params.account_no }, (e, r) => {
+        witdraw.find({ account_no: req.params.account_no }, (e, r) => {
             if (e) { r.json({ code: 0, error: e }); throw "unable to retrieve withdrawal history" }
             res.json(r)
         })
@@ -218,7 +244,6 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     try {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
             if (e) throw "unable to retrieve accouont balance"
-            console.info(r['acctBalance'])
             res.json(r['acctBalance'])
         })
     }
