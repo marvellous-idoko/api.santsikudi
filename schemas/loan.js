@@ -1,4 +1,3 @@
-const { request } = require('express');
 const mongoose = require('mongoose');
 
 const loan = mongoose.Schema({
@@ -32,6 +31,9 @@ const loan = mongoose.Schema({
         intRate: {
             type: String
         },
+        msg: {
+            type: String
+        },
         amount: {
             type: Number
         },
@@ -40,7 +42,6 @@ const loan = mongoose.Schema({
         },
         acctId:{
             type: String
-
         }
 
 
@@ -58,7 +59,9 @@ const loan = mongoose.Schema({
     },
     accepted: {
         type: Boolean
-
+    },
+    offered: {
+        type: Boolean
     },
     loanId: {
         type: String,

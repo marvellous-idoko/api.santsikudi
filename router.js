@@ -6,6 +6,7 @@ const request = util.promisify(req);
 const axios = require('axios')
 const { sterling, nibss, union } = require("innovation-sandbox");
 const loan = require('./schemas/loan')
+const offer = require('./schemas/offers')
 const Email = require('smtp-server')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -81,7 +82,7 @@ router.get('/verifyBVN/:bvn/:id', (req, res) => {
         var k = await loan.find({acctId:req.params.id})
         res.json(k)
     }).get('/loans',async(req,res,next)=>{
-        var ds = await loan.find({})
+        var ds = await loan.find({offered: false || null})
         // console.info(ds)
         res.json(ds)
         return;
@@ -102,6 +103,49 @@ router.post('/loan',async(req,res)=>{
     p = await k.save()
     res.json(p)
 })
+router.post('/submitOffer', async(req,res)=>{
+   var d = await loan.findOne({loanId:req.body.offer.id})
+   d.VCOffer = {
+        intRate : req.body.offer.intRate,
+        amount : req.body.offer.amt,
+        msg : req.body.offer.msg,
+        duration: req.body.offer.years,
+        acctId: req.body.id
+    }
+    d.offered = true
+    console.log(await d.save())
+    const f = new offer({
+        dateOfoffer: new Date(),
+        loanId:req.body.offer.id,
+        amt:req.body.offer.amt,
+        intRate:req.body.offer.intRate,
+        years:req.body.offer.years,
+        id:req.body.id,
+        idofrecepient: req.body.offer.idd
+    })
+    res.json(await f.save())
+})
+router.get('/getOffers/:id',async(req,res)=>{
+    res.json(await offer.find({id:req.params.id}))
+})
+router.get('/rejOffer/:id', async(req,res)=>{
+    var s = await offer.findOne({loanId:req.params.id})
+    s.accepted = false;
+    s.save()
+   var d = await loan.findOne({loanId: req.params.id})
+   d.VCOffer = '';
+   d.offered = false
+    d.save()
+    res.json({a:'offer rejected'})  
+}).get('/accOffer/:id', async(req,res)=>{
+    var s = await offer.findOne({loanId:req.params.id})
+    s.accepted = true;
+    s.save()
+   var d = await loan.findOne({loanId: req.params.id})
+    d.save()
+    res.json({a:'offer accepted'})
+})
+
 router.post('/withdrawal',async(req,res)=>{
     try {
         const u = await userSchema.findOne({account_no:req.body.id})
