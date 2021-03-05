@@ -184,7 +184,7 @@ router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
    
-    var u = await userSchema.findOne({ contact: phoneNumber.sllice(0) });
+    var u = await userSchema.findOne({ contact: toString(phoneNumber).sllice(0) });
     console.info(u)
     console.info( phoneNumber.sllice(0))
     if (u == undefined || null) {
