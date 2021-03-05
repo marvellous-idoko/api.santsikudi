@@ -235,11 +235,11 @@ router.post('/ussd', async (req, res) => {
                     res.send(response);
                     break;
                 }
-                    case '1*1*1*0037514056':{
+                    case text.length == 16:{
                     console.info(text.toString().length)
                         let response;
                         var ne =  nameEnquiry(text.slice(5,15))
-                        if(n.err != null || undefined){
+                        if(n.err == null || undefined){
                             response = `END wrong account number. make sure you're using the 
                             account on the sterling sandbox as this is a test`
                             res.send(response)
