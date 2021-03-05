@@ -184,7 +184,7 @@ router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
    
-    var u = await userSchema.findOne({ contact: phoneNumber });
+    var u = await userSchema.findOne({ contact: phoneNumber.sllice(0) });
     if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
         make sure you use the number submitted while registering on the app`
