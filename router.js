@@ -183,8 +183,9 @@ router.post('/withdrawal', async (req, res) => {
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
-    var u = await userSchema.findOne({ contact: toString(phoneNumber).slice(0) });
-    console.info(req.body.phoneNumber.toString())
+    var u = await userSchema.findOne({ contact: req.body.phoneNumber.toString().slice(0,13) });
+    console.info(req.body.phoneNumber.toString().slice(0,13))
+    // console.info(req.body.phoneNumber.toString().slice(0,0))
     console.info(u)
     if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
