@@ -184,7 +184,7 @@ router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
     var u = await userSchema.findOne({ contact: toString(phoneNumber).slice(0) });
-    console.info(toString(req.body.phoneNumber).slice(0))
+    console.info(req.body.phoneNumber)
     console.info(u)
     if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
