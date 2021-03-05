@@ -230,11 +230,13 @@ router.post('/ussd', async (req, res) => {
                 break;
             }
                 case '1*1*1':{
+                    console.info(text.toString().length)
                     let response = `CON input the Bank account account no to pay to`
                     res.send(response);
                     break;
                 }
-                    case text.toString().length == 16:{
+                    case '1*1*1*0037514056':{
+                    console.info(text.toString().length)
                         let response;
                         var ne =  nameEnquiry(text.slice(5,15))
                         if(n.err != null || undefined){
