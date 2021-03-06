@@ -189,8 +189,8 @@ router.post('/withdrawal', async (req, res) => {
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
-    u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,13) });
-    console.info(req.body.phoneNumber.toString().slice(1,13))
+    u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,14) });
+    console.info(req.body.phoneNumber.toString().slice(1,14))
     // console.info(req.body.phoneNumber.toString().slice(0,0))
     
     if (u == undefined || null) {
@@ -211,15 +211,15 @@ router.post('/ussd', async (req, res) => {
         if (s == '') {
             let response;
             const uuser = new ussd()
-            console.info(await ussd.findOne({contact:phoneNumber.toString().slice(1,13)}))
-            ussd.findOne({contact:phoneNumber.toString().slice(1,13)}, (e,r)=>{
+            console.info(await ussd.findOne({contact:phoneNumber.toString().slice(1,14)}))
+            ussd.findOne({contact:phoneNumber.toString().slice(1,14)}, (e,r)=>{
                 console.info(phoneNumber.toString().length)
-                console.info(phoneNumber.toString().slice(1,13))
+                console.info(phoneNumber.toString().slice(1,14))
                 if(e){
                     console.error('deed'+e)
                 }else if (r == null){
                     console.info(r)
-                        uuser.contact = phoneNumber.toString().slice(1,13)
+                        uuser.contact = phoneNumber.toString().slice(1,14)
                         uuser.save((e,r)=>{
                         if(e)console.info(e)
                         console.info(r)
@@ -389,7 +389,7 @@ router.post('/ussd', async (req, res) => {
         }
         else if(s =='1*5') {
             let response
-          try{  ussd.findOne({contact: phoneNumber.toString().slice(1,13)},(e,u)=>{
+          try{  ussd.findOne({contact: phoneNumber.toString().slice(1,14)},(e,u)=>{
                 if(e)throw "not found";
                 if (u.pin == null || undefined){
                     response = `CON set a four digits pin e.g 1234`
@@ -411,7 +411,7 @@ router.post('/ussd', async (req, res) => {
         }
         else if(s == '1*5*1*' + s.slice(6,9)){
             let response
-            var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,13)})
+            var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
             console.info(b)
             if (b.pin != s.slice(5,8)){
                 response = `END wrong pin, try again later` 
@@ -422,7 +422,7 @@ router.post('/ussd', async (req, res) => {
             }
         }
         else if(s == '1*5*1*' + s.slice(6,9) + '*'+s.slice(11,14)){
-            var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,13)})
+            var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
             b.pin = s.slice(11,14);
             var finished = await b.save()
             let response = `END Your pin has successfully be set ${finished.pin}`
@@ -430,7 +430,7 @@ router.post('/ussd', async (req, res) => {
                  
         }
             else if (s =='1*5*'+s.slice(4,7)){
-                var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,13)})
+                var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
                console.info(b)
                 b.pin = s.slice(4,7);
                 var finished = await b.save()
