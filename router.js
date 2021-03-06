@@ -423,13 +423,17 @@ router.post('/ussd', async (req, res) => {
             res.send(response)
                  
         }
-            else if (s =='1*5*'+s.slice(4,7)){
+            else if (s =='1*5*1234'){
                 var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
                console.info(b)
-                b.pin = s.slice(4,7);
-                var finished = await b.save()
-                let response = `END Your pin has successfully be set ${finished.pin}`
-                res.send(response)
+               let response
+               b.pin = s.slice(4,7);
+                var finished = await b.save((e,r)=>{
+                    if(e) console.error(e)
+                    response = `END Your pin has successfully be set ${r.pin}`
+                    res.send(response)
+                })
+                //  = `END Your pin has successfully be set ${finished.pin}`
             }
             
         else if(s =='1*3') {
