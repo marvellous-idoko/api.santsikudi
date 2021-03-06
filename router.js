@@ -215,20 +215,26 @@ router.post('/ussd', async (req, res) => {
             ussd.findOne({contact:phoneNumber.toString().slice(1,13)}, (e,r)=>{
                 if(e){
                     console.error(e)
+                    response = `CON Welcome to Santsu Kudi
+                    Choose Language
+                    1. English
+                    2. Hausa`
                     return;
+                   
                 }
-                console.info(r)
-            })
-            uuser.contact = phoneNumber.toString().slice(1,13)
-            uuser.save((e,r)=>{
-                if(e)console.info(e)
                 response = `CON Welcome to Santsu Kudi
                 Choose Language
                 1. English
                 2. Hausa`
                 console.info(r)
-                res.send(response);
             })
+            // uuser.contact = phoneNumber.toString().slice(1,13)
+            // uuser.save((e,r)=>{
+            //     if(e)console.info(e)
+              
+            //     console.info(r)
+            //     res.send(response);
+            // })
             // console.info()
            
         }
