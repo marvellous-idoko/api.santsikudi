@@ -258,7 +258,7 @@ router.post('/ussd', async (req, res) => {
                              }
                         
                         }
-                        else if(s == s.slice(0,15) + '*1'){
+                        else if(s == ee.slice(0,15) + '*1'){
                             let response = `CON select amount to transfer
                             1. 1,000.00
                             2. 2,000.00
