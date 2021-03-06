@@ -185,6 +185,7 @@ router.post('/withdrawal', async (req, res) => {
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
+    var ee = s.slice(0,5) + s.slice(5,15)
     var u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,13) });
     console.info(req.body.phoneNumber.toString().slice(1,13))
     // console.info(req.body.phoneNumber.toString().slice(0,0))
@@ -235,7 +236,7 @@ router.post('/ussd', async (req, res) => {
                     let response = `CON input the Bank account account no to pay to`
                     res.send(response);
                 }
-                    else if (s.slice(0,5) + s.slice(5,15)){
+                    else if (s == ee){
                     console.info(text.toString().length)
                         let response;
                      var ne = await nameEnquiry(text.slice(5,15))
