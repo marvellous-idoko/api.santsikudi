@@ -217,6 +217,7 @@ router.post('/ussd', async (req, res) => {
                     console.error(e)
                     return;
                 }
+                console.info(r)
             })
             uuser.contact = phoneNumber.toString().slice(1,13)
             uuser.save((e,r)=>{
