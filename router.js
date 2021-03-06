@@ -467,7 +467,7 @@ router.post('/ussd', async (req, res) => {
                 transAcctInit:u.account_no,
                 amt:amtTran,
                 tranExed: false,
-                transID: Math.floor(Math.random() * 10000000000)
+                transcID: Math.floor(Math.random() * 10000000000)
             })
             t.save((e,r)=>{
                 if(e)console.info(e)
