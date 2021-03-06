@@ -353,7 +353,7 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         }
-        else if(s =='1*2') {
+        else if(s =='1*1*2') {
             console.info('trashpkpkp')
             let response =  `END Here is you account balance ${u.acctBalance}
             Have a nice day`
