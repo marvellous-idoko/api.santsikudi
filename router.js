@@ -414,7 +414,9 @@ router.post('/ussd', async (req, res) => {
             let response
             var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
             console.info(b)
-            if (b.pin != s.slice(5,9)){
+            if (b.pin != s.slice(6,10)){
+                console.log(s.slice(6,10))
+                console.log(s.slice(6,9))
                 response = `END wrong pin, try again later` 
                 res.send(response)
             }else{
@@ -422,9 +424,10 @@ router.post('/ussd', async (req, res) => {
                 res.send(response)
             }
         }
-        else if(s == '1*5*1*' + s.slice(6,10) + '*'+s.slice(11,14)){
+        else if(s == '1*5*1*' + s.slice(6,10) + '*'+s.slice(12)){
+
             var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
-            b.pin = s.slice(11,14);
+            b.pin = s.slice(12);
             var finished = await b.save()
             let response = `END Your pin has successfully be set ${finished.pin}`
             res.send(response)
