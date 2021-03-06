@@ -214,11 +214,6 @@ router.post('/ussd', async (req, res) => {
             ussd.findOne({contact:phoneNumber.toString().slice(1,13)}, (e,r)=>{
                 if(e){
                     console.error('deed'+e)
-                    response = `CON Welcome to Santsu Kudi
-                    Choose Language
-                    1. English
-                    2. Hausa`
-                    res.send(response)
                     return; 
                 }else if (r == null){
                         uuser.contact = phoneNumber.toString().slice(1,13)
