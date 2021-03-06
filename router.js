@@ -565,10 +565,10 @@ function nameEnquiry(aNo){
         host: 'https://sandboxapi.fsi.ng'
 
     }).then(res => {
-        console.log('InterbankNameEnquiry', res)
+        console.log( res)
         return res;
     }).catch(err =>{
-        console.log('InterbankNameEnquiryError', err)
+        console.log(err)
         return err;
     });
 }
