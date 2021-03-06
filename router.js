@@ -238,20 +238,19 @@ router.post('/ussd', async (req, res) => {
                     console.info(text.toString().length)
                         let response;
                      var ne = await nameEnquiry(text.slice(5,15))                      
-                     if(ne.message == 'OK'){
-                        response = `CON Account details retun from the 
-                        sandbox name enquiry  
-                        message: ${ne.data.message}
-                        reponse: ${ne.data.response}
-                        account number : ${ne.data.data.AccountNumber}
-                        account status : ${ne.data.data.status}
-                        select 1 to proceed`
-                        res.send(response)
-                    }
-                }else{
-                    response = `END Wrong Account Number`
-                    res.send(response)
-                }
+                            if(ne.message == 'OK'){
+                                response = `CON Account details retun from the 
+                                sandbox name enquiry  
+                                message: ${ne.data.message}
+                                reponse: ${ne.data.response}
+                                account number : ${ne.data.data.AccountNumber}
+                                account status : ${ne.data.data.status}
+                                select 1 to proceed`
+                                res.send(response)
+                            }else{
+                            response = `END Wrong Account Number`
+                            res.send(response)
+                             }
                         
                         }
                         else if(s.slice(0,15) + '*1'){
