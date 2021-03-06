@@ -232,14 +232,14 @@ router.post('/ussd', async (req, res) => {
                
                
             })
-            uuser.contact = phoneNumber.toString().slice(1,13)
-            uuser.save((e,r)=>{
-                if(e)console.info(e)
+            // uuser.contact = phoneNumber.toString().slice(1,13)
+            // uuser.save((e,r)=>{
+            //     if(e)console.info(e)
               
-                console.info(r)
-                res.send(response);
-            })
-            console.info()
+            //     console.info(r)
+            //     res.send(response);
+            // })
+            // console.info()
            
         }
     else if (s =='1') {
