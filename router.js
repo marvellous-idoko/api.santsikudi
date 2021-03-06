@@ -189,16 +189,21 @@ router.post('/withdrawal', async (req, res) => {
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
-    u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,14) });
-    console.info(req.body.phoneNumber.toString().slice(1,14))
-    // console.info(req.body.phoneNumber.toString().slice(0,0))
-    
-    if (u == undefined || null) {
+    var u;
+    userSchema.findOne({ contact: phoneNumber.toString().slice(1,14) },(e,r)=>{
+        if (e) {
+            console.error(e)
+        return;
+          }
+    else if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
         make sure you use the number submitted while registering on the app`
         res.send(response)
         return;
     }
+    else {u = r;}
+    });
+ 
     var amtTran;
     var s=text.toString()    
 
