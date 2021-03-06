@@ -237,17 +237,10 @@ router.post('/ussd', async (req, res) => {
                     console.info(text.toString().length)
                         let response;
                         var ne =  nameEnquiry(text.slice(5,15))
-                        if(n.err == null || undefined){
-                            response = `END wrong account number. make sure you're using the 
-                            account on the sterling sandbox as this is a test`
-                            res.send(response)
+
+                       
+                        
                         }
-                        else{
-                            response = `CON ${ne}
-                            These are the account details if correct, press 1 to proceed`
-                            res.send(response)
-                        }
-                    }
                         else if(s.slice(0,15) + '*1'){
                             let response = `CON select amount to transfer
                             1. 1,000.00
@@ -574,6 +567,9 @@ function nameEnquiry(aNo){
     }).then(res => {
         console.log('InterbankNameEnquiry', res)
         return res;
+    }).catch(err =>{
+        console.log('InterbankNameEnquiryError', err)
+        return err;
     });
 }
 router.post('/transferFunds/:account_no', (req, res) => {
