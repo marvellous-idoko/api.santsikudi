@@ -21,6 +21,7 @@ const ussd = require('./schemas/ussd')
 const userSchema = require('./schemas/user')
 const deposit = require('./schemas/deposits');
 const { findOne } = require("./schemas/user");
+const e = require("express");
 
 router.use(cookieParser());
 router.use(session({
@@ -195,9 +196,9 @@ router.post('/ussd', async (req, res) => {
     }
     var amtTran;
     var s=text.toString()
-    switch (s) {
+    
 
-        case '': {
+        if (s == '') {
             let response = `CON Welcome to Santsu Kudi
                 Choose Language
                 1. English
@@ -206,9 +207,8 @@ router.post('/ussd', async (req, res) => {
             const uuser = new ussd()
             uuser.contact = phoneNumber
             res.send(response);
-            break;
         }
-        case '1': {
+    else if (s =='1') {
             let response = `CON Thanks for choosing English
             What would you like to do on Santsi Kudi
             1. Payment
@@ -219,24 +219,21 @@ router.post('/ussd', async (req, res) => {
             
             ...Santsi Kudi`
             res.send(response);
-            break;
         }
-            case '1*1': {
+        else if(s =='1*1') {
                 let response = `CON choose where to pay to
                     1. A Financial Institution(Bank) Account
                     2. A Santsi Account Balance
                     
                     ...Santsi Kudi`
                 res.send(response);
-                break;
             }
-                case '1*1*1':{
+                else if(s =='1*1*1'){
                     console.info(text.toString().length)
                     let response = `CON input the Bank account account no to pay to`
                     res.send(response);
-                    break;
                 }
-                    case s.slice(0,5) + s.slice(5,15):{
+                    else if (s.slice(0,5) + s.slice(5,15)){
                     console.info(text.toString().length)
                         let response;
                         var ne =  nameEnquiry(text.slice(5,15))
@@ -244,16 +241,14 @@ router.post('/ussd', async (req, res) => {
                             response = `END wrong account number. make sure you're using the 
                             account on the sterling sandbox as this is a test`
                             res.send(response)
-                            break;
                         }
                         else{
                             response = `CON ${ne}
                             These are the account details if correct, press 1 to proceed`
                             res.send(response)
-                            break;
                         }
                     }
-                        case text.slice(0,15) + '*1':{
+                        else if(s.slice(0,15) + '*1'){
                             let response = `CON select amount to transfer
                             1. 1,000.00
                             2. 2,000.00
@@ -266,71 +261,62 @@ router.post('/ussd', async (req, res) => {
                             9. 100,000.00
                             10. 200,000.00`
                             res.send(response)
-                            break;
                         }
-                        case text.slice(0,15) + '*1*1':{
+                        else if(s.slice(0,15) + '*1*1'){
                             amtTran = 100000
                             let response = `CON Transfering #1,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
                         }
-                        case text.slice(0,15) + '*1*2':{
+                        else if(text.slice(0,15) + '*1*2'){
                             amtTran = 200000
                             let response = `CON Transfering #2,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
                             break;
-                        } case text.slice(0,15) + '*1*3':{
+                        } else if(s.slice(0,15) + '*1*3'){
                             amtTran = 500000
                             let response = `CON Transfering #5,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } case text.slice(0,15) + '*1*4':{
+                        } else if (s.slice(0,15) + '*1*4'){
                             amtTran = 700000
                             let response = `CON Transfering #7,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } case text.slice(0,15) + '*1*5':{
+                        } else if (s.slice(0,15) + '*1*5'){
                             amtTran = 1000000
                             let response = `CON Transfering #10,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } case text.slice(0,15) + '*1*6':{
+                        } else if (s.slice(0,15) + '*1*6'){
                             amtTran = 15000000
                             let response = `CON Transfering #15,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } case text.slice(0,15) + '*1*7':{
+                        } else if(s.slice(0,15) + '*1*7'){
                             amtTran = 2000000
                             let response = `CON Transfering #20,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } case text.slice(0,15) + '*1*8':{
+                        }  else if(s.slice(0,15) + '*1*8'){
                             amtTran = 5000000
                             let response = `CON Transfering #50,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } case text.slice(0,15) + '*1*9':{
+                        } else if(s.slice(0,15) + '*1*9'){
                             amtTran = 10000000
                             let response = `CON Transfering #100,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } case text.slice(0,15) + '*1*10':{
+                        } else if(s.slice(0,15) + '*1*10'){
                             amtTran = 20000000
                             let response = `CON Transfering #200,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
                             break;
                         } 
-                        case text.slice(0,15) + '*1*10'+text.slice(21,25):{
+                        else if(s.slice(0,15) + '*1*10'+s.slice(21,25)){
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
@@ -352,14 +338,14 @@ router.post('/ussd', async (req, res) => {
                             break;
                         }
 
-        case text.length == 12: {
+        else if (s.length == 12) {
             var uid = text.slice(2, 11)
 
             let response = `CON
             1. Sav`
             res.send(response);
         }
-            {
+            // {
                 //    case '2': {
                 //         let response = `CON Thanks for choosing Hausa ${phoneNumber}
                 //             1. Register
@@ -394,13 +380,13 @@ router.post('/ussd', async (req, res) => {
                 //         res.send(response)
                 //         console.info(response)
                 //     }
-            }
-        default: {
+            // }
+        else {
             let response = `END Error processing your request check back later, Make sure you entered the correc information`
             res.send(response);
             break;
         }
-    }
+    // }
 })
 router.get('/chkLog/:account_no', (req, res) => {
     if (userExists(req.params.account_no === true)) {
