@@ -381,7 +381,6 @@ router.post('/ussd', async (req, res) => {
         else {
             let response = `END Error processing your request check back later, Make sure you entered the correc information`
             res.send(response);
-            break;
         }
     // }
 })
