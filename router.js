@@ -209,14 +209,22 @@ router.post('/ussd', async (req, res) => {
     
 
         if (s == '') {
-            let response = `CON Welcome to Santsu Kudi
-                Choose Language
-                1. English
-                2. Hausa`
+            console.info(u.account_no)
+            let response;
             // user.
             const uuser = new ussd()
             uuser.contact = phoneNumber
-            res.send(response);
+            uuser.save((e,r)=>{
+                if(e)console.info(e)
+                response = `CON Welcome to Santsu Kudi
+                Choose Language
+                1. English
+                2. Hausa`
+                console.info(r)
+                res.send(response);
+            })
+            // console.info()
+           
         }
     else if (s =='1') {
             let response = `CON Thanks for choosing English
@@ -375,7 +383,7 @@ router.post('/ussd', async (req, res) => {
             })
             // u.
             }
-            catch(e){console.error(e)}
+            catch(err){console.error(err)}
         }
         else if (s =='1*5*1'){
             let response = `CON input old pin`
