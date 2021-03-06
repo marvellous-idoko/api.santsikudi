@@ -235,7 +235,7 @@ router.post('/ussd', async (req, res) => {
                     res.send(response);
                     break;
                 }
-                    case text.toString().length == 16:{
+                    case retext.toString().length = 16:{
                     console.info(text.toString().length)
                         let response;
                         var ne =  nameEnquiry(text.slice(5,15))
