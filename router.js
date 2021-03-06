@@ -200,7 +200,7 @@ router.post('/ussd', async (req, res) => {
     var oo = s.slice(0,15)
     var ee = s.slice(0,16)
     console.info(ee +"qwsqs")
-    console.info(o + 'oooo')
+    console.info(oo + 'oooo')
 
     
 
