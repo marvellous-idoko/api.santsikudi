@@ -195,7 +195,7 @@ router.post('/ussd', async (req, res) => {
             console.error(e)
         return;
           }
-          else if (r != null || undefined) r = u
+          else if (r != null || undefined) u = r
           else if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
         make sure you use the number submitted while registering on the app`
@@ -465,6 +465,7 @@ router.post('/ussd', async (req, res) => {
             res.send(response)
         }
         else if(s == '1*3*1'){
+
             amtTran = 100000
             let response = `CON Save #1,000.00 to
              your account no ${u.account_no}
