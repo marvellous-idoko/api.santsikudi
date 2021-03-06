@@ -185,7 +185,6 @@ router.post('/withdrawal', async (req, res) => {
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
-    var ee = s.slice(0,5) + s.slice(5,15)
     var u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,13) });
     console.info(req.body.phoneNumber.toString().slice(1,13))
     // console.info(req.body.phoneNumber.toString().slice(0,0))
@@ -199,6 +198,8 @@ router.post('/ussd', async (req, res) => {
     }
     var amtTran;
     var s=text.toString()
+    var ee = s.slice(0,5) + s.slice(5,15)
+
     
 
         if (s == '') {
