@@ -237,7 +237,7 @@ router.post('/ussd', async (req, res) => {
                     let response = `CON input the Bank account account no to pay to`
                     res.send(response);
                 }
-                    else if (s == ee){
+                    else if (s == ee.slice(0,15)){
                     console.info(text.toString().length)
                         let response;
                      var ne = await nameEnquiry(text.slice(5,15))
@@ -257,7 +257,7 @@ router.post('/ussd', async (req, res) => {
                              }
                         
                         }
-                        else if(s == ee.slice(0,ee.length) + '*1'){
+                        else if(s == ee.slice(0,15) + '*1'){
                             let response = `CON select amount to transfer
                             1. 1,000.00
                             2. 2,000.00
