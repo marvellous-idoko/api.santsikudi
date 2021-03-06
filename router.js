@@ -219,8 +219,7 @@ router.post('/ussd', async (req, res) => {
                     Choose Language
                     1. English
                     2. Hausa`
-                    return;
-                   
+                    return; 
                 }
                 response = `CON Welcome to Santsu Kudi
                 Choose Language
