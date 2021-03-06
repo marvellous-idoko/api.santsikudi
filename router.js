@@ -362,17 +362,21 @@ router.post('/ussd', async (req, res) => {
         }
         else if(s =='1*5') {
             let response
-            var u = await ussd.findOne({contact: phoneNumber.toString().slice(1,13)})
+          try{  ussd.findOne({contact: phoneNumber.toString().slice(1,13)},(e,u)=>{
+                if(e)throw "no found"
+                console.info(await ussd.find({}))
+                if (u.pin == null || undefined){
+                    response = `CON set a four digits pin e.g 1234`
+                    res.send(response)
+                }else{
+                    response = `CON pin already set
+                    press 1 to set new pin`
+                    res.send(response)
+                }
+            })
             // u.
-            console.info(await ussd.find({}))
-            if (u.pin == null || undefined){
-                response = `CON set a four digits pin e.g 1234`
-                res.send(response)
-            }else{
-                response = `CON pin already set
-                press 1 to set new pin`
-                res.send(response)
             }
+            catch(e){console.error(e)}
         }
         else if (s =='1*5*1'){
             let response = `CON input old pin`
