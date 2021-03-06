@@ -209,12 +209,11 @@ router.post('/ussd', async (req, res) => {
     
 
         if (s == '') {
-            console.info(u.account_no)
             let response;
             const uuser = new ussd()
             ussd.findOne({contact:phoneNumber.toString().slice(1,13)}, (e,r)=>{
                 if(e){
-                    console.error(e)
+                    console.error('deed'+e)
                     response = `CON Welcome to Santsu Kudi
                     Choose Language
                     1. English
