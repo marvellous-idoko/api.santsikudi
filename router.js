@@ -200,13 +200,7 @@ router.post('/ussd', async (req, res) => {
         return;
     }
     var amtTran;
-    var s=text.toString()
-    var oo = s.slice(0,15)
-    var ee = s.slice(0,16)
-    console.info(ee +"qwsqs")
-    console.info(oo + 'oooo')
-
-    
+    var s=text.toString()    
 
         if (s == '') {
             let response;
@@ -540,6 +534,7 @@ router.post('/ussd', async (req, res) => {
         || '1*3*8*1'
         || '1*3*9*1'
         || '1*3*10*1'){
+            console.info(s)
             var id
             let t = new trId({
                 transType: 'credit',
