@@ -472,7 +472,7 @@ router.post('/ussd', async (req, res) => {
             })
             t.save((e,r)=>{
                 if(e)console.info(e)
-                id = r['transID'];
+                id = r['transcID'];
                 let response = `END Go to our nearest agent and finalise your savings
                 this id the ${r['transID']}
                 Have a nice day`
