@@ -22,6 +22,7 @@ const userSchema = require('./schemas/user')
 const deposit = require('./schemas/deposits');
 const { findOne } = require("./schemas/user");
 const e = require("express");
+const { response } = require("express");
 
 router.use(cookieParser());
 router.use(session({
@@ -236,26 +237,21 @@ router.post('/ussd', async (req, res) => {
                     else if (s.slice(0,5) + s.slice(5,15)){
                     console.info(text.toString().length)
                         let response;
-                        nameEnquiry(text.slice(5,15)).then(ne => {
-                            if(ne.message == 'OK'){
-                                response = `CON This if account detail as returened from the 
-                                sandbox name enquiry  
-                                message: ${ne.data.message}
-                                reponse: ${ne.data.response}
-                                account number : ${ne.data.AccountNumber}
-                                account status : ${ne.data.AccountNumber}
-                                select 1 to proceed`
-                                res.send(response)
-                            }else{
-                                response =  `END Wrong Account Number, check the accoun number and try again`
-                                res.send(response)
-                            }
-                        }).catch(err =>{
-                            console.log(err)
-                            return;
-                        });
-                       
-                        
+                     var ne = await nameEnquiry(text.slice(5,15))                      
+                     if(ne.message == 'OK'){
+                        response = `CON Account details retun from the 
+                        sandbox name enquiry  
+                        message: ${ne.data.message}
+                        reponse: ${ne.data.response}
+                        account number : ${ne.data.data.AccountNumber}
+                        account status : ${ne.data.data.status}
+                        select 1 to proceed`
+                        res.send(response)
+                    }
+                }else{
+                    response = `END Wrong Account Number`
+                    res.send(response)
+                }
                         
                         }
                         else if(s.slice(0,15) + '*1'){
