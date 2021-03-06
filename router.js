@@ -116,6 +116,7 @@ router.post('/loan', async (req, res) => {
     p = await k.save()
     res.json(p)
 })
+
 router.post('/submitOffer', async (req, res) => {
     var d = await loan.findOne({ loanId: req.body.offer.id })
     d.VCOffer = {
@@ -183,11 +184,11 @@ router.post('/withdrawal', async (req, res) => {
         console.error(ex);
     }
 })
-var acctNoToTransferTo;
+var acctNoToTransferTo;  var u;
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
-    var u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,13) });
+    u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,13) });
     console.info(req.body.phoneNumber.toString().slice(1,13))
     // console.info(req.body.phoneNumber.toString().slice(0,0))
     
