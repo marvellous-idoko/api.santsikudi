@@ -243,7 +243,7 @@ router.post('/ussd', async (req, res) => {
                     else if (s == ee.slice(0,16)){
                     console.info(text.toString().length)
                         let response;
-                     var ne = await nameEnquiry(text.slice(5,15))
+                     var ne = await nameEnquiry(text.slice(5,16))
                      acctNoToTransferTo = ne.data.data.AccountNumber;
 
                             if(ne.message == 'OK'){
@@ -261,7 +261,7 @@ router.post('/ussd', async (req, res) => {
                              }
                         
                         }
-                        else if(s == ee.slice(0,16) + '*1'){
+                        else if(s == s.slice(0,16) + '*1'){
                             let response = `CON select amount to transfer
                             1. 1,000.00
                             2. 2,000.00
@@ -282,7 +282,7 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         }
-                        else if(s == s.slice(0,15) + '*1*2'){
+                        else if(s == s.slice(0,16) + '*1*2'){
                             
                             amtTran = 200000
                             let response = `CON Transfering #2,000.00 to ${ne}
