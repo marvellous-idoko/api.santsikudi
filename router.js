@@ -409,7 +409,8 @@ router.post('/ussd', async (req, res) => {
             res.send(response)
             
         }
-        else if(s == '1*5*1*' + s.slice(6,9)){
+        else if(s == '1*5*1*' + s.slice(6,10)){
+            console.log(s.slice(6,10))
             let response
             var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
             console.info(b)
