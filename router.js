@@ -240,7 +240,7 @@ router.post('/ussd', async (req, res) => {
                     let response = `CON input the Bank account account no to pay to`
                     res.send(response);
                 }
-                    else if (s == ee.slice(0,16)){
+                    else if (s == s.slice(0,16)){
                     console.info(text.toString().length)
                         let response;
                      var ne = await nameEnquiry(text.slice(5,16))
@@ -288,48 +288,48 @@ router.post('/ussd', async (req, res) => {
                             let response = `CON Transfering #2,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,15) + '*1*3'){
+                        } else if(s == s.slice(0,16) + '*1*3'){
                             amtTran = 500000
                             let response = `CON Transfering #5,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if (s == s.slice(0,15) + '*1*4'){
+                        } else if (s == s.slice(0,16) + '*1*4'){
                             amtTran = 700000
                             let response = `CON Transfering #7,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if (s == s.slice(0,15) + '*1*5'){
+                        } else if (s == s.slice(0,16) + '*1*5'){
                             amtTran = 1000000
                             let response = `CON Transfering #10,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if (s == s.slice(0,15) + '*1*6'){
+                        } else if (s == s.slice(0,16) + '*1*6'){
                             amtTran = 15000000
                             let response = `CON Transfering #15,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,15) + '*1*7'){
+                        } else if(s == s.slice(0,16) + '*1*7'){
                             amtTran = 2000000
                             let response = `CON Transfering #20,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        }  else if(s == s.slice(0,15) + '*1*8'){
+                        }  else if(s == s.slice(0,16) + '*1*8'){
                             amtTran = 5000000
                             let response = `CON Transfering #50,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,15) + '*1*9'){
+                        } else if(s == s.slice(0,16) + '*1*9'){
                             amtTran = 10000000
                             let response = `CON Transfering #100,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,15) + '*1*10'){
+                        } else if(s == s.slice(0,16) + '*1*10'){
                             amtTran = 20000000
                             let response = `CON Transfering #200,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
                         } 
-                        else if(s == s.slice(0,15) + '*1*10'+s.slice(21,25)){
+                        else if(s == s.slice(0,16) + '*1*10'+s.slice(21,25)){
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
