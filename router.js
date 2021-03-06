@@ -218,23 +218,24 @@ router.post('/ussd', async (req, res) => {
                     Choose Language
                     1. English
                     2. Hausa`
-                res.send(response)
+                    res.send(response)
                     return; 
+                }else if (r == null){
+                        uuser.contact = phoneNumber.toString().slice(1,13)
+                        uuser.save((e,r)=>{
+                        if(e)console.info(e)
+                        console.info(r)
+                     res.send(response);
+                    })
+                }else{
+                    response = `CON Welcome to Santsu Kudi
+                    Choose Language
+                    1. English
+                    2. Hausa`
+                    res.send(response)
                 }
-                response = `CON Welcome to Santsu Kudi
-                Choose Language
-                1. English
-                2. Hausa`
-                if (r == null){
-                    uuser.contact = phoneNumber.toString().slice(1,13)
-                    uuser.save((e,r)=>{
-                if(e)console.info(e)
-              
-                console.info(r)
-                res.send(response);
-                })
-                }
-                res.send(response)
+               
+               
             })
             uuser.contact = phoneNumber.toString().slice(1,13)
             uuser.save((e,r)=>{
