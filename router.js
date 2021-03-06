@@ -16,6 +16,7 @@ const AT = ATs({
     apiKey: '1e4af632fde243b21fa1c28ee43fc71f3a84c6f89e6604f6b29d5afb9f328c65',
     username: 'sandbox'
 });
+const trId = require('./schemas/transactionIDs')
 const ussd = require('./schemas/ussd') 
 // import schemas here
 const userSchema = require('./schemas/user')
@@ -220,9 +221,11 @@ router.post('/ussd', async (req, res) => {
             What would you like to do on Santsi Kudi
             1. Payment
             2. Account Balance Enquiry
-            3. Savings
-            4. loan status enquiry
+            3. Save
+            4. loan
             5. create pin
+            6. Withdrawal
+
             
             ...Santsi Kudi`
             res.send(response);
@@ -285,47 +288,47 @@ router.post('/ussd', async (req, res) => {
                         else if(s == s.slice(0,16) + '*1*2'){
                             
                             amtTran = 200000
-                            let response = `CON Transfering #2,000.00 to ${ne}
+                            let response = `CON Transfering #2,000.00 to ${nacctNoToTransferToe}
                             input your pin to complete payment`
                             res.send(response)
                         } else if(s == s.slice(0,16) + '*1*3'){
                             amtTran = 500000
-                            let response = `CON Transfering #5,000.00 to ${ne}
+                            let response = `CON Transfering #5,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         } else if (s == s.slice(0,16) + '*1*4'){
                             amtTran = 700000
-                            let response = `CON Transfering #7,000.00 to ${ne}
+                            let response = `CON Transfering #7,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         } else if (s == s.slice(0,16) + '*1*5'){
                             amtTran = 1000000
-                            let response = `CON Transfering #10,000.00 to ${ne}
+                            let response = `CON Transfering #10,000.00 to ${nacctNoToTransferToe}
                             input your pin to complete payment`
                             res.send(response)
                         } else if (s == s.slice(0,16) + '*1*6'){
                             amtTran = 15000000
-                            let response = `CON Transfering #15,000.00 to ${ne}
+                            let response = `CON Transfering #15,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         } else if(s == s.slice(0,16) + '*1*7'){
                             amtTran = 2000000
-                            let response = `CON Transfering #20,000.00 to ${ne}
+                            let response = `CON Transfering #20,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         }  else if(s == s.slice(0,16) + '*1*8'){
                             amtTran = 5000000
-                            let response = `CON Transfering #50,000.00 to ${ne}
+                            let response = `CON Transfering #50,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         } else if(s == s.slice(0,16) + '*1*9'){
                             amtTran = 10000000
-                            let response = `CON Transfering #100,000.00 to ${ne}
+                            let response = `CON Transfering #100,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         } else if(s == s.slice(0,16) + '*1*10'){
                             amtTran = 20000000
-                            let response = `CON Transfering #200,000.00 to ${ne}
+                            let response = `CON Transfering #200,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         } 
@@ -333,7 +336,7 @@ router.post('/ussd', async (req, res) => {
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
-                                response = `END create a pin. To perform transactions on Santsi kudi`
+                                response = `END go to main menu andcreate a pin. To perform transactions on Santsi kudi`
                                 res.send(response)
                                 return;
                             }
@@ -349,6 +352,131 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         }
+        else if(s =='1*2') {
+            let response =  `END Here is you account balance ${u.acctBalance}
+            Have a nice day`
+            res.send(response)
+        }
+          
+        else if(s =='1*3') {
+            let response = `CON select amount to save
+            1. 1,000.00
+            2. 2,000.00
+            3. 5,000.00
+            4. 7,000.00
+            5. 10,000.00
+            6. 15,000.00
+            7. 20,000.00
+            8. 50,000.00
+            9. 100,000.00
+            10. 200,000.00`
+            res.send(response)
+        }
+        else if(s == '1*3*1'){
+            amtTran = 100000
+            let response = `CON Save #1,000.00 to
+             your account no ${u.account_no}
+            input your pin to complete payment`
+            res.send(response)
+        }
+        else if(s == '1*3*2'){
+            
+            amtTran = 200000
+            let response = `CON Save #2,000.00 to ${u.account_no}
+            input your pin to complete payment`
+            res.send(response)
+        } else if(s == '1*3*3'){
+            amtTran = 500000
+            let response = `CON Save #5,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if (s == '1*3*4'){
+            amtTran = 700000
+            let response = `CON Save #7,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if (s == '1*3*5'){
+            amtTran = 1000000
+            let response = `CON Save #10,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if (s == '1*3*6'){
+            amtTran = 15000000
+            let response = `CON Save #15,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if(s == '1*3*7'){
+            amtTran = 2000000
+            let response = `CON Save #20,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        }  else if(s == '1*3*8'){
+            amtTran = 5000000
+            let response = `CON Save #50,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if(s == '1*3*9'){
+            amtTran = 10000000
+            let response = `CON Save #100,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if(s == '1*3*10'){
+            amtTran = 20000000
+            let response = `CON Save #200,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent (generate voucher)
+            2. Airtime
+            3. Account`
+            res.send(response)
+        }
+        else if(s == '1*3*1*1' 
+        || '1*3*2*1'
+        || '1*3*3*1'
+        || '1*3*4*1'
+        || '1*3*5*1'
+        || '1*3*6*1'
+        || '1*3*7*1'
+        || '1*3*8*1'
+        || '1*3*9*1'
+        || '1*3*10*1'){
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
 
         else if (s.length == 12) {
             var uid = text.slice(2, 11)
