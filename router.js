@@ -236,20 +236,25 @@ router.post('/ussd', async (req, res) => {
                     else if (s.slice(0,5) + s.slice(5,15)){
                     console.info(text.toString().length)
                         let response;
-                        var ne =  nameEnquiry(text.slice(5,15))
-                        if(ne.message == 'OK'){
-                            response = `CON This if account detail as returened from the 
-                            sandbox name enquiry  
-                            message: ${ne.data.message}
-                            reponse: ${ne.data.response}
-                            account number : ${ne.data.AccountNumber}
-                            account status : ${ne.data.AccountNumber}
-                            select 1 to proceed`
-                            res.send(response)
-                        }else{
-                            response =  `END Wrong Account Number, check the accoun number and try again`
-                            res.send(response)
-                        }
+                        nameEnquiry(text.slice(5,15)).then(ne => {
+                            if(ne.message == 'OK'){
+                                response = `CON This if account detail as returened from the 
+                                sandbox name enquiry  
+                                message: ${ne.data.message}
+                                reponse: ${ne.data.response}
+                                account number : ${ne.data.AccountNumber}
+                                account status : ${ne.data.AccountNumber}
+                                select 1 to proceed`
+                                res.send(response)
+                            }else{
+                                response =  `END Wrong Account Number, check the accoun number and try again`
+                                res.send(response)
+                            }
+                        }).catch(err =>{
+                            console.log(err)
+                            return;
+                        });
+                       
                         
                         
                         }
@@ -562,7 +567,7 @@ function transferSt(fromAccount,toAccount,amt,Oname,Rname){
 }
 
 function nameEnquiry(aNo){
-    sterling.Transfer.InterbankNameEnquiry({
+    return sterling.Transfer.InterbankNameEnquiry({
         sandbox_key: sandboxKey,
         params: {
             Referenceid: '01',
@@ -576,13 +581,7 @@ function nameEnquiry(aNo){
         ipval: '0',
         host: 'https://sandboxapi.fsi.ng'
 
-    }).then(res => {
-        console.log( res)
-        return res;
-    }).catch(err =>{
-        console.log(err)
-        return err;
-    });
+    })
 }
 router.post('/transferFunds/:account_no', (req, res) => {
 
