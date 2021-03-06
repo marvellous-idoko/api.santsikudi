@@ -188,7 +188,6 @@ router.post('/ussd', async (req, res) => {
     var u = await userSchema.findOne({ contact: phoneNumber.toString().slice(1,13) });
     console.info(req.body.phoneNumber.toString().slice(1,13))
     // console.info(req.body.phoneNumber.toString().slice(0,0))
-    console.info(u)
     var acctNoToTransferTo;
     if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
@@ -198,7 +197,7 @@ router.post('/ussd', async (req, res) => {
     }
     var amtTran;
     var s=text.toString()
-    var ee = s
+    var ee = s.slice(0,15)
     console.info(ee)
 
     
@@ -258,7 +257,7 @@ router.post('/ussd', async (req, res) => {
                              }
                         
                         }
-                        else if(s == ee.slice(0,15) + '*1'){
+                        else if(s == ee + '*1'){
                             let response = `CON select amount to transfer
                             1. 1,000.00
                             2. 2,000.00
