@@ -409,6 +409,8 @@ router.post('/ussd', async (req, res) => {
             res.send(response)
             
         }
+        
+
         else if(s == '1*5*1*' + s.slice(6,10)){
             console.log(s.slice(6,10))
             let response
