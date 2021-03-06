@@ -194,7 +194,8 @@ router.post('/ussd', async (req, res) => {
         return;
     }
     var amtTran;
-    switch (text) {
+    var s=text.toString()
+    switch (s) {
 
         case '': {
             let response = `CON Welcome to Santsu Kudi
@@ -235,7 +236,7 @@ router.post('/ussd', async (req, res) => {
                     res.send(response);
                     break;
                 }
-                    case text.toString().slice(0,5) + text.toString().slice(5,15):{
+                    case s.slice(0,5) + s.slice(5,15):{
                     console.info(text.toString().length)
                         let response;
                         var ne =  nameEnquiry(text.slice(5,15))
