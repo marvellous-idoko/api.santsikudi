@@ -313,8 +313,7 @@ router.post('/ussd', async (req, res) => {
                             let response = `CON Transfering #200,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
-                        } 
+\                        } 
                         else if(s.slice(0,15) + '*1*10'+s.slice(21,25)){
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
@@ -334,7 +333,6 @@ router.post('/ussd', async (req, res) => {
                             response = `CON Transfering #200,000.00 to ${ne}
                             input your pin to complete payment`
                             res.send(response)
-                            break;
                         }
 
         else if (s.length == 12) {
