@@ -29,4 +29,4 @@ const transID = mongoose.Schema({
         type: Date,
     }
 });
-const transID = module.exports = mongoose.model('transID', transID);
+const transacID = module.exports = mongoose.model('transID', transID);
