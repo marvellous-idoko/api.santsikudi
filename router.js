@@ -211,9 +211,14 @@ router.post('/ussd', async (req, res) => {
         if (s == '') {
             console.info(u.account_no)
             let response;
-            // user.
             const uuser = new ussd()
-            uuser.contact = phoneNumber
+            ussd.findOne({contact:phoneNumber.toString().slice(1,13)}, (e,r)=>{
+                if(e){
+                    console.error(e)
+                    return;
+                }
+            })
+            uuser.contact = phoneNumber.toString().slice(1,13)
             uuser.save((e,r)=>{
                 if(e)console.info(e)
                 response = `CON Welcome to Santsu Kudi
@@ -371,7 +376,7 @@ router.post('/ussd', async (req, res) => {
         else if(s =='1*5') {
             let response
           try{  ussd.findOne({contact: phoneNumber.toString().slice(1,13)},(e,u)=>{
-                if(e)throw "no found"
+                if(e)throw "not found";
                 if (u.pin == null || undefined){
                     response = `CON set a four digits pin e.g 1234`
                     res.send(response)
