@@ -211,11 +211,13 @@ router.post('/ussd', async (req, res) => {
         if (s == '') {
             let response;
             const uuser = new ussd()
+            console.info(await ussd.findOne({contact:phoneNumber.toString().slice(1,13)}))
             ussd.findOne({contact:phoneNumber.toString().slice(1,13)}, (e,r)=>{
+               console.info(await ussd.findOne({contact:phoneNumber.toString().slice(1,13)}))
                 if(e){
                     console.error('deed'+e)
-                    return; 
                 }else if (r == null){
+                    console.info(r)
                         uuser.contact = phoneNumber.toString().slice(1,13)
                         uuser.save((e,r)=>{
                         if(e)console.info(e)
