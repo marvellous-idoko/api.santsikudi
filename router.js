@@ -195,13 +195,14 @@ router.post('/ussd', async (req, res) => {
             console.error(e)
         return;
           }
-        else if (u == undefined || null) {
+          else if (r != null || undefined) r = u
+          else if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
         make sure you use the number submitted while registering on the app`
         res.send(response)
         return;
     }
-    else {u = r;}
+    
     });
  
     var amtTran;
