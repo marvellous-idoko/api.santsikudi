@@ -213,7 +213,8 @@ router.post('/ussd', async (req, res) => {
             const uuser = new ussd()
             console.info(await ussd.findOne({contact:phoneNumber.toString().slice(1,13)}))
             ussd.findOne({contact:phoneNumber.toString().slice(1,13)}, (e,r)=>{
-               console.info(await ussd.findOne({contact:phoneNumber.toString().slice(1,13)}))
+                console.info(phoneNumber.toString().length)
+                console.info(phoneNumber.toString().slice(1,13))
                 if(e){
                     console.error('deed'+e)
                 }else if (r == null){
