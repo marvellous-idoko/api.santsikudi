@@ -275,7 +275,7 @@ router.post('/ussd', async (req, res) => {
                         }
                         else if(s == s.slice(0,16) + '*1*1'){
                             amtTran = 100000
-                            let response = `CON Transfering #1,000.00 to ${amtTran/100}
+                            let response = `CON Transfering #1,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         }
