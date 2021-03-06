@@ -197,8 +197,10 @@ router.post('/ussd', async (req, res) => {
     }
     var amtTran;
     var s=text.toString()
-    var ee = s.slice(0,15)
-    console.info(ee)
+    var oo = s.slice(0,15)
+    var ee = s.slice(0,16)
+    console.info(ee +"qwsqs")
+    console.info(o + 'oooo')
 
     
 
