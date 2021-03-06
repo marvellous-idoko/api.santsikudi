@@ -218,6 +218,7 @@ router.post('/ussd', async (req, res) => {
                     Choose Language
                     1. English
                     2. Hausa`
+                res.send(response)
                     return; 
                 }
                 response = `CON Welcome to Santsu Kudi
@@ -225,6 +226,7 @@ router.post('/ussd', async (req, res) => {
                 1. English
                 2. Hausa`
                 console.info(r)
+                res.send(response)
             })
             // uuser.contact = phoneNumber.toString().slice(1,13)
             // uuser.save((e,r)=>{
