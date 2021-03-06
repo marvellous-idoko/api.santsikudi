@@ -354,6 +354,7 @@ router.post('/ussd', async (req, res) => {
                             res.send(response)
                         }
         else if(s =='1*2') {
+            console.info('trashpkpkp')
             let response =  `END Here is you account balance ${u.acctBalance}
             Have a nice day`
             res.send(response)
