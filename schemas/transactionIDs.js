@@ -17,7 +17,7 @@ const transID = mongoose.Schema({
         type: String,
         required: true
     },
-    transID:{
+    transcID:{
         type: String,
         required: true
     },
