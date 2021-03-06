@@ -189,6 +189,7 @@ router.post('/ussd', async (req, res) => {
     console.info(req.body.phoneNumber.toString().slice(1,13))
     // console.info(req.body.phoneNumber.toString().slice(0,0))
     console.info(u)
+    var acctNoToTransferTo;
     if (u == undefined || null) {
         let response = `END Your phone no. does not exist on Santsi Kudi, 
         make sure you use the number submitted while registering on the app`
@@ -237,7 +238,8 @@ router.post('/ussd', async (req, res) => {
                     else if (s == s.slice(0,5) + s.slice(5,15)){
                     console.info(text.toString().length)
                         let response;
-                     var ne = await nameEnquiry(text.slice(5,15))                      
+                     var ne = await nameEnquiry(text.slice(5,15))
+                     acctNoToTransferTo = ne.data.data.AccountNumber;
                             if(ne.message == 'OK'){
                                 response = `CON Account details retun from the 
                                 sandbox name enquiry  
@@ -273,7 +275,8 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         }
-                        else if(text.slice(0,15) + '*1*2'){
+                        else if(s == s.slice(0,15) + '*1*2'){
+                            
                             amtTran = 200000
                             let response = `CON Transfering #2,000.00 to ${ne}
                             input your pin to complete payment`
