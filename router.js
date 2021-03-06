@@ -364,7 +364,7 @@ router.post('/ussd', async (req, res) => {
             let response
             var u = await ussd.findOne({contact: phoneNumber.toString().slice(1,13)})
             // u.
-            console.info(u)
+            console.info(await ussd.find({}))
             if (u.pin == null || undefined){
                 response = `CON set a four digits pin e.g 1234`
                 res.send(response)
