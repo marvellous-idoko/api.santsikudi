@@ -235,7 +235,7 @@ router.post('/ussd', async (req, res) => {
                     let response = `CON input the Bank account account no to pay to`
                     res.send(response);
                 }
-                    else if (s == s.slice(0,5) + s.slice(5,15)){
+                    else if (s.slice(0,5) + s.slice(5,15)){
                     console.info(text.toString().length)
                         let response;
                      var ne = await nameEnquiry(text.slice(5,15))
