@@ -672,7 +672,7 @@ router.post('/genTranID',(req,res)=>{
     console.info(req.body)  
 
     try{  
-    var uio = new transIDD({
+    var uio = new transID({
         transType:'credit',
         transDtInit: new Date(),
         aod:req.body.aod,
