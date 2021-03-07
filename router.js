@@ -693,17 +693,18 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
         t.save(async (e, uu) => {
             if (e) throw 0;
             console.info(uu)
-            const p = await userSchema.findOne({ account_no: uu['account_noOfReceipient'] })
-            console.info(p)
-            p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(req.params.amount))
-            console.info(p.acctBalance)
-            var ppp = await p.save();
-            console.info(ppp)
+
             // p.save((e, s) => {
             //      if (e) console.info(e)
             //     console.info(s)
             //     })
         })
+        const p = await userSchema.findOne({ account_no: uu['account_noOfReceipient'] })
+        console.info(p)
+        p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(req.params.amount))
+        console.info(p.acctBalance)
+        var ppp = await p.save();
+        console.info(ppp)
 
     } catch (e) {
         console.info(e)
