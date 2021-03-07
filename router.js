@@ -669,8 +669,9 @@ router.post('/withID',  async(req,res)=>{
     witIDD(req.body)
 })
 router.post('/genTranID',(req,res)=>{
-  try{  
     console.info(req.body)  
+
+    try{  
     var uio = new transIDD({
         transType:'credit',
         transDtInit: new Date(),
