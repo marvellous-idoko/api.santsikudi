@@ -696,7 +696,7 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', async(req, res) => {
             p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(req.params.amount))
             console.info(p.acctBalance)
             var ppp = await p.save();
-            console.info(ppp)
+            res.json(ppp)
         })
        
 
