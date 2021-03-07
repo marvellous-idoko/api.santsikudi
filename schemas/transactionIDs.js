@@ -9,9 +9,17 @@ const transID = mongoose.Schema({
         type: Date,
         required: true
     },
-    transAcctInit: {
+    aod: {
         type: String,
-        required: true
+    },
+    nod: {
+        type: String,
+    },
+    nor: {
+        type: String,
+    },
+    aor: {
+        type: String,
     },
     amt:{
         type: String,
@@ -27,6 +35,12 @@ const transID = mongoose.Schema({
     },
     tranDtExe: {
         type: Date,
+    },
+    witAcct:{
+        type: String
+    },
+    witName:{
+        type:String
     }
 });
 const transacID = module.exports = mongoose.model('transID', transID);
