@@ -695,7 +695,8 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
             console.info(uu)
             const p = await userSchema.findOne({ account_no: uu['account_noOfReceipient'] })
             console.info(p)
-            p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(t['amountDeposited']))
+            p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(req.params.amount))
+            console.info(p.acctBalance)
             p.save((e, s) => {
                  if (e) res.json({ code: 0, msg: e.message, id: null })
                 console.info(s)
