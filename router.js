@@ -679,7 +679,7 @@ function getTrID(g){
        })
 }
 
-router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
+router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', async(req, res) => {
     let t = new deposit({
         dateOfTransaction: new Date(),
         nameOfDepostor: req.params.nod,
