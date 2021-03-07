@@ -16,7 +16,8 @@ const AT = ATs({
     apiKey: '1e4af632fde243b21fa1c28ee43fc71f3a84c6f89e6604f6b29d5afb9f328c65',
     username: 'sandbox'
 });
-const trId = require('./schemas/transactionIDs')
+const transIDD = require('./schemas/transactionIDs')
+// const trId = require('./schemas/transactionIDs')
 const ussd = require('./schemas/ussd') 
 // import schemas here
 const userSchema = require('./schemas/user')
@@ -158,7 +159,16 @@ router.get('/rejOffer/:id', async (req, res) => {
     var d = await loan.findOne({ loanId: req.params.id })
     d.save()
     res.json({ a: 'offer accepted' })
+}).get('/nameEnq/:acctNo',(req,res)=>{
+    nameEnquiry(req.params.acctNo).then(e=>{
+        res.json(e['data'])
+    })
+}).get('/intBankEnq/:acctNo',(req,res)=>{
+    transferSt(req.params.acctNo).then(e=>{
+        res.json(e['data'])
+    })
 })
+
 
 router.post('/withdrawal', async (req, res) => {
     try {
@@ -553,6 +563,7 @@ router.post('/ussd', async (req, res) => {
         || '1*3*8*1'
         || '1*3*9*1'
         || '1*3*10*1'){
+
             console.info(s)
             var id
             let t = new trId({
@@ -627,6 +638,49 @@ router.get('/chkLog/:account_no', (req, res) => {
         res.json({ code: 1, user: r })
     } else res.json(0)
 })
+router.post('/withID',(req,res)=>{
+    const u = await userSchema.findOne({ account_no: req.body.witAcct })
+    if (u.acctBalance < parseInt(req.body.amt)) {
+        res.json({ code: 00, msg: "insuficient funds" });
+        return;
+    }
+    witIDD(req.body)
+})
+router.post('/genTranID',(req,res)=>{
+   res.json(getTrID(req.body))
+})
+function witIDD(g){
+    var uio = new transIDD({
+        transType:'Debit',
+        transDtInit: new Date(),
+        amt:g.amt,
+        witAcct:g.witAcct,
+        witName:g.witName,
+        transcID: Math.floor(Math.random() * 10000000000),
+        tranExed:false
+       })
+       uio.save((e,r)=>{
+           if(e) console.error(e)
+           res.json(r['transcID'])
+       })
+}
+function getTrID(g){
+    var uio = new transIDD({
+        transType:'credit',
+        transDtInit: new Date(),
+        aod:g.aod,
+        nod:g.nod,
+        nor:g.nor,
+        aor:g.aor,
+        amt:g.amt,
+        transcID: Math.floor(Math.random() * 10000000000),
+        tranExed:false
+       })
+       uio.save((e,r)=>{
+           if(e) console.error(e)
+           return r(['transcID']);
+       })
+}
 
 router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', (req, res) => {
     let t = new deposit({
@@ -688,7 +742,7 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     try {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
             if (e) throw "accouont doesn't exist on santsii kudi"
-            res.json({ code: 1, name: r['fullName'], contact: r['contact'] })
+            res.json({ code: 1, name: r['fullName'], contact: r['contact'],account_no:r['account_no'] })
         })
     }
     catch (err) {
@@ -787,7 +841,9 @@ function transferSt(fromAccount,toAccount,amt,Oname,Rname){
         },
         sterlingHeader
     }).then(res => {
+        
         console.log('InterbankTransferReq', res)
+        return res;
     }).catch(e => {
         console.info(e);
     })
