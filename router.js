@@ -638,7 +638,7 @@ router.get('/chkLog/:account_no', (req, res) => {
         res.json({ code: 1, user: r })
     } else res.json(0)
 })
-router.post('/withID',(req,res)=>{
+router.post('/withID',  async(req,res)=>{
     const u = await userSchema.findOne({ account_no: req.body.witAcct })
     if (u.acctBalance < parseInt(req.body.amt)) {
         res.json({ code: 00, msg: "insuficient funds" });
