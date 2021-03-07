@@ -164,11 +164,33 @@ router.get('/rejOffer/:id', async (req, res) => {
         res.json(e['data'])
     })
 }).get('/intBankEnq/:acctNo/:amt',(req,res)=>{
-    console.info(transferSt(req.params.acctNo,req.params.acctNo,
-        req.params.amt,'Paul Gambia','Adrian Daniels'))
-        res.json(transferSt(req.params.acctNo,req.params.acctNo,
-            req.params.amt,'Paul Gambia','Adrian Daniels'))
+    // console.info(transferSt(req.params.acctNo,req.params.acctNo,
+        // req.params.amt,'Paul Gambia','Adrian Daniels'))
+       
+                sterling.Account.InterbankTransferReq({
+                    sandbox_key: sandboxKey,
+                    payload: {
+                        Referenceid: sTrefId,
+                        RequestType: sTrefTyp,
+                        Translocation: sTtransLoc,
+                        ToAccount:req.params.acctNot,
+                        Destinationbankcode: '01',
+                        SessionID: '01',
+                        FromAccount:req.params.acctNo,
+                        Amount:  req.params.amt,
+                        NEResponse: '01',
+                        BenefiName: 'Adrian Daniels',
+                        PaymentReference: '01',
+                        OriginatorAccountName:'Paul Gambia',
+                        translocation: '01'
+                    },
+                    sterlingHeader
+                }).then(resp => {
+                   res.json(resp)
+                }).catch(e => {
+                    console.info(e);
     })
+})
 
 router.post('/withdrawal', async (req, res) => {
     try {
