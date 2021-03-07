@@ -164,11 +164,8 @@ router.get('/rejOffer/:id', async (req, res) => {
         res.json(e['data'])
     })
 }).get('/intBankEnq/:acctNo',(req,res)=>{
-    // .then(e=>{
         res.json(transferSt(req.params.acctNo))
     })
-})
-
 
 router.post('/withdrawal', async (req, res) => {
     try {
