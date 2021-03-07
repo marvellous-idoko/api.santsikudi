@@ -164,8 +164,8 @@ router.get('/rejOffer/:id', async (req, res) => {
         res.json(e['data'])
     })
 }).get('/intBankEnq/:acctNo',(req,res)=>{
-    transferSt(req.params.acctNo).then(e=>{
-        res.json(e['data'])
+    // .then(e=>{
+        res.json(transferSt(req.params.acctNo))
     })
 })
 
