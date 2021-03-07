@@ -841,7 +841,7 @@ function transferSt(fromAccount,toAccount,amt,Oname,Rname){
         },
         sterlingHeader
     }).then(res => {
-        return res;
+        console.info(res);
     }).catch(e => {
         console.info(e);
     })
