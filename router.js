@@ -693,11 +693,6 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', async(req, res) => {
         t.save(async (e, uu) => {
             if (e) throw 0;
             console.info(uu)
-
-            // p.save((e, s) => {
-            //      if (e) console.info(e)
-            //     console.info(s)
-            //     })
         })
         const p = await userSchema.findOne({ account_no:req.params.aor })
         console.info(p)
