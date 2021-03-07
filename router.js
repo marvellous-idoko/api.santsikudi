@@ -163,9 +163,11 @@ router.get('/rejOffer/:id', async (req, res) => {
     nameEnquiry(req.params.acctNo).then(e=>{
         res.json(e['data'])
     })
-}).get('/intBankEnq/:acctNo',(req,res)=>{
-    console.info(transferSt(req.params.acctNo))
-        res.json(transferSt(req.params.acctNo))
+}).get('/intBankEnq/:acctNo/:amt',(req,res)=>{
+    console.info(transferSt(req.params.acctNo,req.params.acctNo,
+        req.params.amt,'Paul Gambia','Adrian Daniels'))
+        res.json(transferSt(req.params.acctNo,req.params.acctNo,
+            req.params.amt,'Paul Gambia','Adrian Daniels'))
     })
 
 router.post('/withdrawal', async (req, res) => {
