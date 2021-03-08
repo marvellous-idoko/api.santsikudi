@@ -263,19 +263,8 @@ router.post('/ussd', async (req, res) => {
                     1. English
                     2. Hausa`
                     res.send(response)
-                }
-               
-               
+                } 
             })
-            // uuser.contact = phoneNumber.toString().slice(1,13)
-            // uuser.save((e,r)=>{
-            //     if(e)console.info(e)
-              
-            //     console.info(r)
-            //     res.send(response);
-            // })
-            // console.info()
-           
         }
     else if (s =='1') {
             let response = `CON Thanks for choosing English
@@ -294,7 +283,7 @@ router.post('/ussd', async (req, res) => {
         else if(s =='1*1') {
                 let response = `CON choose where to pay to
                     1. A Financial Institution(Bank) Account
-                    2. A Santsi Account Balance
+                    2. A Santsi Account
                     
                     ...Santsi Kudi`
                 res.send(response);
@@ -604,6 +593,335 @@ router.post('/ussd', async (req, res) => {
                 Have a nice day`
             });
         }
+
+
+        else if (s =='2') {
+            let response = `CON Godiya ga zabar Turanci
+            Me kuke so kuyi Santsi Kudi
+            1. biya
+            2. Asusun lissafi
+            3. ajiye
+            4. lamuni
+            5. ƙirƙirar fil
+            6. Janyewa
+
+            
+            ...Santsi Kudi`
+            res.send(response);
+        }
+        else if(s =='2*1') {
+                let response = `CON choose where to pay to
+                    1. Assusun Banki
+                    2. Assusun Santsi
+                    
+                    ...Santsi Kudi`
+                res.send(response);
+            }
+                else if(s =='2*1*1'){
+                    console.info(text.toString().length)
+                    let response = `CON shigar da asusun ajiyar Banki ba biya`
+                    res.send(response);
+                }
+                    else if (s == '2*1*1*'+s.slice(6)){
+                    console.info(text.toString().length)
+                        let response;
+                     var ne = await nameEnquiry(text.slice(5,16))
+                     acctNoToTransferTo = ne.data.data.AccountNumber;
+
+                            if(ne.message == 'OK'){
+                                response = `CON Bayanan asusun sun sake dawowa daga
+                                binciken sunan sandbox 
+                                sako: ${ne.data.message}
+                                amsa: ${ne.data.response}
+                                Assunsun Lamba : ${ne.data.data.AccountNumber}
+                                Matsayin asusu : ${ne.data.data.status}
+                                zaɓi 1 don ci gaba`
+                                res.send(response)
+                            }else{
+                            response = `END Lambar Asusun Ba daidai ba `
+                            res.send(response)
+                             }
+                        
+                        }
+                        else if(s == s.slice(0,16) + '*1'){
+                            let response = `CON zaɓi adadin don canja wurin
+                           1. 1,000.00
+                            2. 2,000.00
+                            3. 5,000.00
+                            4. 7,000.00
+                            5. 10,000.00
+                            6. 15,000.00
+                            7. 20,000.00
+                            8. 50,000.00
+                            9. 100,000.00
+                            10. 200,000.00`
+                            res.send(response)
+                        }
+                        else if(s == s.slice(0,16) + '*1*1'){
+                            amtTran = 100000
+                            let response = `CON Canzawa #1,000.00 to
+                             ${acctNoToTransferTo}
+                             shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        }
+                        else if(s == s.slice(0,16) + '*1*2'){
+                            
+                            amtTran = 200000
+                            let response = `CON Canzawa #2,000.00 to ${nacctNoToTransferToe}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } else if(s == s.slice(0,16) + '*1*3'){
+                            amtTran = 500000
+                            let response = `CON Canzawa #5,000.00 to ${acctNoToTransferTo}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } else if (s == s.slice(0,16) + '*1*4'){
+                            amtTran = 700000
+                            let response = `CON Canzawa #7,000.00 to ${acctNoToTransferTo}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } else if (s == s.slice(0,16) + '*1*5'){
+                            amtTran = 1000000
+                            let response = `CON Canzawa #10,000.00 to ${nacctNoToTransferToe}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } else if (s == s.slice(0,16) + '*1*6'){
+                            amtTran = 15000000
+                            let response = `CON Canzaawa #15,000.00 to ${acctNoToTransferTo}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } else if(s == s.slice(0,16) + '*1*7'){
+                            amtTran = 2000000
+                            let response = `CON Canzawa #20,000.00 to ${acctNoToTransferTo}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        }  else if(s == s.slice(0,16) + '*1*8'){
+                            amtTran = 5000000
+                            let response = `CON Canzawa #50,000.00 to ${acctNoToTransferTo}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } else if(s == s.slice(0,16) + '*1*9'){
+                            amtTran = 10000000
+                            let response = `CON Canzawa #100,000.00 to ${acctNoToTransferTo}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } else if(s == s.slice(0,16) + '*1*10'){
+                            amtTran = 20000000
+                            let response = `CON Canzawa #200,000.00 to ${acctNoToTransferTo}
+                            shigar da pin dinka dan kammala biyan kudi`
+                            res.send(response)
+                        } 
+                        else if(s == s.slice(0,16) + '*1*10'+s.slice(21,25)){
+                            let response;
+                            o = ussd.findOne({contact:phoneNumber})
+                            if (o.pin == null || undefined) {
+                                response = `END je zuwa menu na ainihi kuma ƙirƙiri fil. Don yin ma'amala akan
+                                Santsi kudi`
+                                res.send(response)
+                                return;
+                            }
+                            else if (o.pin != text.slice(21,25)){
+                                response = `END Kuskuren kuskure, bincika fil ɗin ka sake gwadawa daga baya`
+                                res.send(response)
+                                return;
+                            }
+                            else if (o.pin == text.slice(21,25)){
+
+                            }
+                        }
+        else if(s =='2*2') {
+            
+            let response =  `END Here is you account balance ${u.acctBalance}
+            Have a nice day`
+            res.send(response)
+        }
+        else if(s =='2*5') {
+            let response
+          try{  ussd.findOne({contact: phoneNumber.toString().slice(1,14)},(e,u)=>{
+                if(e)throw "not found";
+                if (u.pin == null || undefined){
+                    response = `CON set a four digits pin e.g 1234`
+                    res.send(response)
+                }else{
+                    response = `CON pin already set
+                    press 1 to set new pin`
+                    res.send(response)
+                }
+            })
+            // u.
+            }
+            catch(err){console.error(err)}
+        }
+        else if (s =='1*5*1'){
+            let response = `CON input old pin`
+            res.send(response)
+            
+        }
+        
+
+        else if(s == '2*5*1*' + s.slice(6,10)){
+            console.log(s.slice(6,10))
+            let response
+            var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
+            console.info(b)
+            if (b.pin != s.slice(6,10)){
+                console.log(s.slice(6,10))
+                console.log(s.slice(6,9))
+                response = `END wrong pin, try again later` 
+                res.send(response)
+            }else{
+                response = `CON Input new pin e.g 1234`
+                res.send(response)
+            }
+        }
+        else if(s == '2*5*1*' + s.slice(6,10) + '*'+s.slice(12)){
+
+            var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
+            b.pin = s.slice(12);
+            var finished = await b.save()
+            let response = `END Your pin has successfully be set ${finished.pin}`
+            res.send(response)
+                 
+        }
+            else if (s =='2*5*'+ s.slice(4,8)){
+                var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
+               console.info(b)
+               let response
+               console.info(s)
+               console.info(s.slice(4,8))
+               b.pin = s.slice(4,8);
+                var finished = await b.save((e,r)=>{
+                    if(e) console.error(e)
+                    response = `END Your pin has successfully be set ${r.pin}`
+                    res.send(response)
+                })
+                //  = `END Your pin has successfully be set ${finished.pin}`
+            }
+            
+        else if(s =='2*3') {
+            let response = `CON select amount to save
+            1. 1,000.00
+            2. 2,000.00
+            3. 5,000.00
+            4. 7,000.00
+            5. 10,000.00
+            6. 15,000.00
+            7. 20,000.00
+            8. 50,000.00
+            9. 100,000.00
+            10. 200,000.00`
+            res.send(response)
+        }
+        else if(s == '2*3*1'){
+
+            amtTran = 100000
+            let response = `CON Save #1,000.00 to
+             your account no ${u.account_no}
+            input your pin to complete payment`
+            res.send(response)
+        }
+        else if(s == '2*3*2'){
+            
+            amtTran = 200000
+            let response = `CON Save #2,000.00 to ${u.account_no}
+            input your pin to complete payment`
+            res.send(response)
+        } else if(s == '2*3*3'){
+            amtTran = 500000
+            let response = `CON Save #5,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if (s == '2*3*4'){
+            amtTran = 700000
+            let response = `CON Save #7,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if (s == '2*3*5'){
+            amtTran = 1000000
+            let response = `CON Save #10,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if (s == '2*3*6'){
+            amtTran = 15000000
+            let response = `CON Save #15,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if(s == '2*3*7'){
+            amtTran = 2000000
+            let response = `CON Save #20,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        }  else if(s == '2*3*8'){
+            amtTran = 5000000
+            let response = `CON Save #50,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if(s == '2*3*9'){
+            amtTran = 10000000
+            let response = `CON Save #100,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent
+            2. Airtime
+            3. Account`
+            res.send(response)
+        } else if(s == '2*3*10'){
+            amtTran = 20000000
+            let response = `CON Save #200,000.00 to ${u.account_no}
+            select mode of payment
+            1. Agent (generate voucher)
+            2. Airtime
+            3. Account`
+            res.send(response)
+        }
+        else if(s == '2*3*1*1' 
+        || '2*3*2*1'
+        || '2*3*3*1'
+        || '2*3*4*1'
+        || '2*3*5*1'
+        || '2*3*6*1'
+        || '2*3*7*1'
+        || '2*3*8*1'
+        || '2*3*9*1'
+        || '2*3*10*1'){
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
 
         else if (s.length == 12) {
             var uid = text.slice(2, 11)
