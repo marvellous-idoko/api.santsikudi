@@ -396,12 +396,38 @@ router.post('/ussd', async (req, res) => {
                                 return;
                             }
                             else if (o.pin == text.slice(21,25)){
-
-                            }
-                            response = `CON Transfering #200,000.00 to ${ne}
-                            input your pin to complete payment`
-                            res.send(response)
-                        }
+                                 
+                sterling.Account.InterbankTransferReq({
+                    sandbox_key: sandboxKey,
+                    payload: {
+                        Referenceid: sTrefId,
+                        RequestType: sTrefTyp,
+                        Translocation: sTtransLoc,
+                        ToAccount:acctNoToTransferTo,
+                        Destinationbankcode: '01',
+                        SessionID: '01',
+                        FromAccount:acctNoToTransferTo,
+                        Amount:  amtTran,
+                        NEResponse: '01',
+                        BenefiName: 'Adrian Daniels',
+                        PaymentReference: '01',
+                        OriginatorAccountName:'Paul Gambia',
+                        translocation: '01'
+                    },
+                    sterlingHeader
+                }).then(resp => {
+                   let response =  `END Transfer successful
+                   message: ${resp.message}
+                   response: ${resp.data.response}
+                   response text: ${resp.data.data.ResponseText}
+                   status: ${resp.data.data.status}
+                        `
+                    res.send(resp)
+                }).catch(e => {
+                    console.info(e);
+                    })
+                }
+              }
         else if(s =='1*2') {
             
             let response =  `END Here is you account balance ${u.acctBalance}
@@ -842,7 +868,6 @@ else if (s =='3') {
                             response = `END Lambar Asusun Ba daidai ba `
                             res.send(response)
                              }
-                        
                         }
                         else if(s == s.slice(0,16) + '*1'){
                             let response = `CON zaɓi adadin don canja wurin
@@ -928,12 +953,42 @@ else if (s =='3') {
                             }
                             else if (o.pin == text.slice(21,25)){
 
+                                sterling.Account.InterbankTransferReq({
+                                    sandbox_key: sandboxKey,
+                                    payload: {
+                                        Referenceid: sTrefId,
+                                        RequestType: sTrefTyp,
+                                        Translocation: sTtransLoc,
+                                        ToAccount:acctNoToTransferTo,
+                                        Destinationbankcode: '01',
+                                        SessionID: '01',
+                                        FromAccount:acctNoToTransferTo,
+                                        Amount:  amtTran,
+                                        NEResponse: '01',
+                                        BenefiName: 'Adrian Daniels',
+                                        PaymentReference: '01',
+                                        OriginatorAccountName:'Paul Gambia',
+                                        translocation: '01'
+                                    },
+                                    sterlingHeader
+                                }).then(resp => {
+                                   let response =  `END Transfer successful
+                                   message: ${resp.message}
+                                   response: ${resp.data.response}
+                                   response text: ${resp.data.data.ResponseText}
+                                   status: ${resp.data.data.status}
+                                        `
+                                    res.send(resp)
+                                }).catch(e => {
+                                    console.info(e);
+                                    })
+                               
                             }
                         }
         else if(s =='2*2') {
             
-            let response =  `END Here is you account balance ${u.acctBalance}
-            Have a nice day`
+            let response =  `END Ga lissafin ku ${u.acctBalance}
+            `
             res.send(response)
         }
         else if(s =='2*5') {
@@ -941,11 +996,11 @@ else if (s =='3') {
           try{  ussd.findOne({contact: phoneNumber.toString().slice(1,14)},(e,u)=>{
                 if(e)throw "not found";
                 if (u.pin == null || undefined){
-                    response = `CON set a four digits pin e.g 1234`
+                    response = `CON saita misali pin pin lambobi hudu 1234`
                     res.send(response)
                 }else{
-                    response = `CON pin already set
-                    press 1 to set new pin`
+                    response = `CON fil an riga an saita
+                    latsa 1 don saita sabon fil`
                     res.send(response)
                 }
             })
@@ -954,7 +1009,7 @@ else if (s =='3') {
             catch(err){console.error(err)}
         }
         else if (s =='1*5*1'){
-            let response = `CON input old pin`
+            let response = `CON shigar da tsohon fil`
             res.send(response)
             
         }
@@ -968,10 +1023,10 @@ else if (s =='3') {
             if (b.pin != s.slice(6,10)){
                 console.log(s.slice(6,10))
                 console.log(s.slice(6,9))
-                response = `END wrong pin, try again later` 
+                response = `END Kuskuren kuskure, sake gwadawa daga baya` 
                 res.send(response)
             }else{
-                response = `CON Input new pin e.g 1234`
+                response = `CON saita misali pin pin lambobi hudu e.g 1234`
                 res.send(response)
             }
         }
@@ -980,7 +1035,7 @@ else if (s =='3') {
             var b = await ussd.findOne({contact:phoneNumber.toString().slice(1,14)})
             b.pin = s.slice(12);
             var finished = await b.save()
-            let response = `END Your pin has successfully be set ${finished.pin}`
+            let response = `END An shirya nasarar fil ɗinka ${finished.pin}`
             res.send(response)
                  
         }
@@ -1131,47 +1186,10 @@ else if (s =='3') {
             1. Sav`
             res.send(response);
         }
-            // {
-                //    case '2': {
-                //         let response = `CON Thanks for choosing Hausa ${phoneNumber}
-                //             1. Register
-                //             2. Login
-                //         `
-                //         res.send(response);
-                //         break;
-                //     }
-                //     case '2*1': {
-                //         let response = `CON Enter Your details in this format
-                //         Fulname : Business Address : State where business is located : Business Name : No. of Employees : Secret code
-                //         Example:
-                //         Shehu Aminat : 12, kaaro cl, Maitama Abuja : Kaduna : Ramat wears : 10 : 3423`
-                //         res.send(response);
-                //         break;
-                //     } case '2*1*': {
-                //         let response = `END You have successfully Registered your Business with Santsi Kudi
-                //         Your Account No. is 9092772635`
-                //     }
-                //     case '2*2': {
-                //         let response = `CON Enter Your Account No.`
-                //         res.send(response);
-                //         break;
-                //     }
-                //     case text.length == 14: {
-                //         let response = `CON Enter Your secret pin`
-                //         res.send(response);
-                //         break;
-                //     }
-                //     case text.length == 18: {
-                //         let response = `END ${text.split('*')}`
-                //         res.send(response)
-                //         console.info(response)
-                //     }
-            // }
         else {
             let response = `END Error processing your request check back later, Make sure you entered the correc information`
             res.send(response);
         }
-    // }
 })
 router.get('/chkLog/:account_no', (req, res) => {
     if (userExists(req.params.account_no === true)) {
