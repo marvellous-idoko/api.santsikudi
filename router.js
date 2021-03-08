@@ -364,7 +364,7 @@ router.post('/ussd', async (req, res) => {
                              }
                         
                         }
-                        else if('1*1*1*'+s.slice(6,16) + '*1'){
+                        else if(s == '1*1*1*'+s.slice(6,16) + '*1'){
                             console.log('we see you o ==> ' +s)
                             let response = `CON select amount to transfer
                             1. 1,000.00
@@ -379,7 +379,7 @@ router.post('/ussd', async (req, res) => {
                             10. 200,000.00`
                             res.send(response)
                         }
-                        else if('1*1*1*'+s.slice(6,16) + '*1'+ s.slice(19,20)){
+                        else if(s == '1*1*1*'+s.slice(6,16) + '*1'+ s.slice(19,20)){
                             if(s.slice(19,20) == '*1'){
                             amtTran = 100000
                             let response = `CON Transfering #1,000.00 to
@@ -453,7 +453,7 @@ router.post('/ussd', async (req, res) => {
             //             } else if('1*1*1*'+s.slice(6,16) + '*1*10'){
                           
             //             } 
-                        else if('1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
+                        else if(s =='1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
