@@ -595,7 +595,11 @@ router.post('/ussd', async (req, res) => {
         }
 
 
-else if (s =='2') {
+else if (s =='3') {
+    let response = `End Working  . . . .`
+    res.send(response)
+}
+    else if (s =='2') {
     let response = `CON Godiya ga zabar Turanci
     Me kuke so kuyi Santsi Kudi
        1. biya
@@ -606,11 +610,11 @@ else if (s =='2') {
        6. Janyewa
  
        ...Santsi Kudi`
-            res.send(response);
+        res.send(response);
         }
-        else if(s =='2*1') {
-                let response = `CON choose where to pay to
-                    1. Assusun Banki
+            else if(s =='2*1') {
+                 let response = `CON choose where to pay to
+                 1. Assusun Banki
                     2. Assusun Santsi
                     
                     ...Santsi Kudi`
