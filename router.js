@@ -384,8 +384,7 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         }
-                        else if('1*1*1*'+s.slice(6,16) + '*1*2'){
-                            
+                        else if('1*1*1*'+s.slice(6,16) + '*1*2'){                
                             amtTran = 200000
                             let response = `CON Transfering #2,000.00 to ${nacctNoToTransferToe}
                             input your pin to complete payment`
@@ -930,7 +929,7 @@ else if (s =='3') {
                             res.send(response)
                              }
                         }
-                        else if(s == s.slice(0,16) + '*1'){
+                        else if(s == '2*1*1*'+s.slice(6,16)  + '*1'){
                             let response = `CON zaɓi adadin don canja wurin
                            1. 1,000.00
                             2. 2,000.00
@@ -944,61 +943,61 @@ else if (s =='3') {
                             10. 200,000.00`
                             res.send(response)
                         }
-                        else if(s == s.slice(0,16) + '*1*1'){
+                        else if(s =='2*1*1*'+s.slice(6,16)  + '*1*1'){
                             amtTran = 100000
                             let response = `CON Canzawa #1,000.00 to
                              ${acctNoToTransferTo}
                              shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
                         }
-                        else if(s == s.slice(0,16) + '*1*2'){
+                        else if(s == '2*1*1*'+s.slice(6,16)  + '*1*2'){
                             
                             amtTran = 200000
                             let response = `CON Canzawa #2,000.00 to ${nacctNoToTransferToe}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*3'){
+                        } else if(s =='2*1*1*'+s.slice(6,16)  + '*1*3'){
                             amtTran = 500000
                             let response = `CON Canzawa #5,000.00 to ${acctNoToTransferTo}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        } else if (s == s.slice(0,16) + '*1*4'){
+                        } else if (s == '2*1*1*'+s.slice(6,16)  + '*1*4'){
                             amtTran = 700000
                             let response = `CON Canzawa #7,000.00 to ${acctNoToTransferTo}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        } else if (s == s.slice(0,16) + '*1*5'){
+                        } else if (s == '2*1*1*'+s.slice(6,16)  + '*1*5'){
                             amtTran = 1000000
                             let response = `CON Canzawa #10,000.00 to ${nacctNoToTransferToe}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        } else if (s == s.slice(0,16) + '*1*6'){
+                        } else if (s == '2*1*1*'+s.slice(6,16)  + '*1*6'){
                             amtTran = 15000000
                             let response = `CON Canzaawa #15,000.00 to ${acctNoToTransferTo}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*7'){
+                        } else if(s == '2*1*1*'+s.slice(6,16)  + '*1*7'){
                             amtTran = 2000000
                             let response = `CON Canzawa #20,000.00 to ${acctNoToTransferTo}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        }  else if(s == s.slice(0,16) + '*1*8'){
+                        }  else if(s == '2*1*1*'+s.slice(6,16)  + '*1*8'){
                             amtTran = 5000000
                             let response = `CON Canzawa #50,000.00 to ${acctNoToTransferTo}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*9'){
+                        } else if(s == '2*1*1*'+s.slice(6,16)  + '*1*9'){
                             amtTran = 10000000
                             let response = `CON Canzawa #100,000.00 to ${acctNoToTransferTo}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*10'){
+                        } else if(s == '2*1*1*'+s.slice(6,16)  + '*1*10'){
                             amtTran = 20000000
                             let response = `CON Canzawa #200,000.00 to ${acctNoToTransferTo}
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
                         } 
-                        else if(s == s.slice(0,16) + '*1*10'+s.slice(21,25)){
+                        else if(s == '2*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
