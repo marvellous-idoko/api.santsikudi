@@ -378,59 +378,80 @@ router.post('/ussd', async (req, res) => {
                             10. 200,000.00`
                             res.send(response)
                         }
-                        else if('1*1*1*'+s.slice(6,16) + '*1*1'){
+                        else if('1*1*1*'+s.slice(6,16) + '*1'+ s.slice(19,20)){
+                            if(s.slice(19,20) == '*1'){
                             amtTran = 100000
                             let response = `CON Transfering #1,000.00 to
                              ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
+                            }
+                            else if(s.slice(19,20) == '*2'){  
+                                amtTran = 200000
+                                let response = `CON Transfering #2,000.00 to ${acctNoToTransferToe}
+                                input your pin to complete payment`
+                                res.send(response)     }
+                            else if(s.slice(19,20) == '*3'){    
+                                amtTran = 500000
+                                let response = `CON Transfering #5,000.00 to ${acctNoToTransferTo}
+                                input your pin to complete payment`
+                                res.send(response)   }
+                            else if(s.slice(19,20) == '*4'){    
+                                amtTran = 700000
+                                let response = `CON Transfering #7,000.00 to ${acctNoToTransferTo}
+                                input your pin to complete payment`
+                                res.send(response)    }
+                            else if(s.slice(19,20) == '*5'){      
+                                amtTran = 1000000
+                                let response = `CON Transfering #10,000.00 to ${nacctNoToTransferToe}
+                                input your pin to complete payment`
+                                res.send(response)   }
+                            else if(s.slice(19,20) == '*6'){    
+                                amtTran = 15000000
+                                let response = `CON Transfering #15,000.00 to ${acctNoToTransferTo}
+                                input your pin to complete payment`
+                                res.send(response)    }
+                            else if(s.slice(19,20) == '*7'){    
+                                amtTran = 2000000
+                                let response = `CON Transfering #20,000.00 to ${acctNoToTransferTo}
+                                input your pin to complete payment`
+                                res.send(response)    }
+                            else if(s.slice(19,20) == '*8'){   amtTran = 5000000
+                                let response = `CON Transfering #50,000.00 to ${acctNoToTransferTo}
+                                input your pin to complete payment`
+                                res.send(response)    }
+                            else if(s.slice(19,20) == '*9'){    
+                                amtTran = 10000000
+                                let response = `CON Transfering #100,000.00 to ${acctNoToTransferTo}
+                                input your pin to complete payment`
+                                res.send(response)    }
+                            else if(s.slice(19,20) == '*10'){    
+                                amtTran = 20000000
+                                let response = `CON Transfering #200,000.00 to ${acctNoToTransferTo}
+                                input your pin to complete payment`
+                                res.send(response)    }
+
+                            
                         }
-                        else if('1*1*1*'+s.slice(6,16) + '*1*2'){                
-                            amtTran = 200000
-                            let response = `CON Transfering #2,000.00 to ${nacctNoToTransferToe}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if('1*1*1*'+s.slice(6,16) + '*1*3'){
-                            amtTran = 500000
-                            let response = `CON Transfering #5,000.00 to ${acctNoToTransferTo}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if ('1*1*1*'+s.slice(6,16) + '*1*4'){
-                            amtTran = 700000
-                            let response = `CON Transfering #7,000.00 to ${acctNoToTransferTo}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if ('1*1*1*'+s.slice(6,16) + '*1*5'){
-                            amtTran = 1000000
-                            let response = `CON Transfering #10,000.00 to ${nacctNoToTransferToe}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if ('1*1*1*'+s.slice(6,16) + '*1*6'){
-                            amtTran = 15000000
-                            let response = `CON Transfering #15,000.00 to ${acctNoToTransferTo}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if('1*1*1*'+s.slice(6,16) + '*1*7'){
-                            amtTran = 2000000
-                            let response = `CON Transfering #20,000.00 to ${acctNoToTransferTo}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if('1*1*1*'+s.slice(6,16) + '*1*8'){
-                            amtTran = 5000000
-                            let response = `CON Transfering #50,000.00 to ${acctNoToTransferTo}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if('1*1*1*'+s.slice(6,16) + '*1*9'){
-                            amtTran = 10000000
-                            let response = `CON Transfering #100,000.00 to ${acctNoToTransferTo}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } else if('1*1*1*'+s.slice(6,16) + '*1*10'){
-                            amtTran = 20000000
-                            let response = `CON Transfering #200,000.00 to ${acctNoToTransferTo}
-                            input your pin to complete payment`
-                            res.send(response)
-                        } 
+            //             else if('1*1*1*'+s.slice(6,16) + '*1*2'){                
+                            
+            //             } else if('1*1*1*'+s.slice(6,16) + '*1*3'){
+            // x                
+            //             } else if ('1*1*1*'+s.slice(6,16) + '*1*4'){
+                           
+            //             } else if ('1*1*1*'+s.slice(6,16) + '*1*5'){
+                          
+            //             } else if ('1*1*1*'+s.slice(6,16) + '*1*6'){
+                           
+            //             } else if('1*1*1*'+s.slice(6,16) + '*1*7'){
+                           
+            //             } else if('1*1*1*'+s.slice(6,16) + '*1*8'){
+                            
+            //             } else if('1*1*1*'+s.slice(6,16) + '*1*9'){
+                           
+            //             } else if('1*1*1*'+s.slice(6,16) + '*1*10'){
+                          
+            //             } 
                         else if('1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
