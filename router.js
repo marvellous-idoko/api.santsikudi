@@ -365,6 +365,7 @@ router.post('/ussd', async (req, res) => {
                         
                         }
                         else if('1*1*1*'+s.slice(6,16) + '*1'){
+                            console.log('we see you o ==> ' +s)
                             let response = `CON select amount to transfer
                             1. 1,000.00
                             2. 2,000.00
