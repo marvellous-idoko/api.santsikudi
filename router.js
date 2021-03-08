@@ -280,6 +280,7 @@ router.post('/ussd', async (req, res) => {
             ...Santsi Kudi`
             res.send(response);
         }
+
         else if(s =='1*1') {
                 let response = `CON choose where to pay to
                     1. A Financial Institution(Bank) Account
@@ -287,7 +288,49 @@ router.post('/ussd', async (req, res) => {
                     
                     ...Santsi Kudi`
                 res.send(response);
-            }
+            }   
+                else if(s == '1*1*2'){
+                    let response =  `Input the Santsi Kudi Account to credit`
+                    res.send(response) 
+                        }
+                    else if(s == '1*1*2*'+s.slice(6,16)){
+                      let response;
+                        var uyt = await userSchema({account_no:slice(6,16)})
+                        if(uyt == null || undefined){
+                            response = `END Account no found check your 
+                            Check the account number and try again later`
+                            res.send(response)
+                        }
+                        response = `CON Details of the account to transfer to
+                        Name: ${uyt['fullName']}
+                        Account Number: ${uyt['account_no']}
+                        select 1 to proceed`
+                        res.send(res)
+                    }
+                        else if(s == '1*1*2*'+s.slice(6,16) +'*1'){
+                            let t = new deposit({
+                                dateOfTransaction: new Date(),
+                                nameOfDepostor: u.fullName,
+                                account_noOfDepositor: u.account_no,
+                                amountDeposited: req.params.amount,
+                                account_noOfReceipient: req.params.aor,
+                                nameOfReceipient: req.params.nor,
+                                refNo: Math.floor(Math.random() * 10000000000)
+                            })
+                            try {
+                                t.save(async (e, uu) => {
+                                    if (e) throw 0;
+                                    const p = await userSchema.findOne({ account_no:req.params.aor })
+                                    p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(req.params.amount))
+                                    console.info(p.acctBalance)
+                                    var ppp = await p.save();
+                                    res.json(ppp)
+                                })
+                               
+                            } catch (e) {
+                                console.info(e)
+                            }
+                        }
                 else if(s =='1*1*1'){
                     console.info(text.toString().length)
                     let response = `CON input the Bank account account no to pay to`
@@ -301,7 +344,8 @@ router.post('/ussd', async (req, res) => {
                             if(ne.data.data.AccountNumber != text.slice(5,16)){
                                 response =  `END You have entered a wrong Account number 
                                 N:B: Only the account number found on the Sterling Sandbox
-                                can be used for this transaction. Which is 0037514056`
+                                can be used for this transaction. Which is ${text.slice(5,16)}
+                                real ${ne.data.data.AccountNumber}`
                                 res.send(response)
                             }
 
@@ -320,7 +364,7 @@ router.post('/ussd', async (req, res) => {
                              }
                         
                         }
-                        else if(s == s.slice(0,16) + '*1'){
+                        else if('1*1*1*'+s.slice(6,16) + '*1'){
                             let response = `CON select amount to transfer
                             1. 1,000.00
                             2. 2,000.00
@@ -334,65 +378,66 @@ router.post('/ussd', async (req, res) => {
                             10. 200,000.00`
                             res.send(response)
                         }
-                        else if(s == s.slice(0,16) + '*1*1'){
+                        else if('1*1*1*'+s.slice(6,16) + '*1*1'){
                             amtTran = 100000
                             let response = `CON Transfering #1,000.00 to
                              ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         }
-                        else if(s == s.slice(0,16) + '*1*2'){
+                        else if('1*1*1*'+s.slice(6,16) + '*1*2'){
                             
                             amtTran = 200000
                             let response = `CON Transfering #2,000.00 to ${nacctNoToTransferToe}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*3'){
+                        } else if('1*1*1*'+s.slice(6,16) + '*1*3'){
                             amtTran = 500000
                             let response = `CON Transfering #5,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if (s == s.slice(0,16) + '*1*4'){
+                        } else if ('1*1*1*'+s.slice(6,16) + '*1*4'){
                             amtTran = 700000
                             let response = `CON Transfering #7,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if (s == s.slice(0,16) + '*1*5'){
+                        } else if ('1*1*1*'+s.slice(6,16) + '*1*5'){
                             amtTran = 1000000
                             let response = `CON Transfering #10,000.00 to ${nacctNoToTransferToe}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if (s == s.slice(0,16) + '*1*6'){
+                        } else if ('1*1*1*'+s.slice(6,16) + '*1*6'){
                             amtTran = 15000000
                             let response = `CON Transfering #15,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*7'){
+                        } else if('1*1*1*'+s.slice(6,16) + '*1*7'){
                             amtTran = 2000000
                             let response = `CON Transfering #20,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
-                        }  else if(s == s.slice(0,16) + '*1*8'){
+                        } else if('1*1*1*'+s.slice(6,16) + '*1*8'){
                             amtTran = 5000000
                             let response = `CON Transfering #50,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*9'){
+                        } else if('1*1*1*'+s.slice(6,16) + '*1*9'){
                             amtTran = 10000000
                             let response = `CON Transfering #100,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
-                        } else if(s == s.slice(0,16) + '*1*10'){
+                        } else if('1*1*1*'+s.slice(6,16) + '*1*10'){
                             amtTran = 20000000
                             let response = `CON Transfering #200,000.00 to ${acctNoToTransferTo}
                             input your pin to complete payment`
                             res.send(response)
                         } 
-                        else if(s == s.slice(0,16) + '*1*10'+s.slice(21,25)){
+                        else if('1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
-                                response = `END go to main menu andcreate a pin. To perform transactions on Santsi kudi`
+                                response = `END go to main menu and create a pin. 
+                                To perform transactions on Santsi kudi`
                                 res.send(response)
                                 return;
                             }
@@ -402,37 +447,43 @@ router.post('/ussd', async (req, res) => {
                                 return;
                             }
                             else if (o.pin == text.slice(21,25)){
-                                 
-                sterling.Account.InterbankTransferReq({
-                    sandbox_key: sandboxKey,
-                    payload: {
-                        Referenceid: sTrefId,
-                        RequestType: sTrefTyp,
-                        Translocation: sTtransLoc,
-                        ToAccount:acctNoToTransferTo,
-                        Destinationbankcode: '01',
-                        SessionID: '01',
-                        FromAccount:acctNoToTransferTo,
-                        Amount:  amtTran,
-                        NEResponse: '01',
-                        BenefiName: 'Adrian Daniels',
-                        PaymentReference: '01',
-                        OriginatorAccountName:'Paul Gambia',
-                        translocation: '01'
-                    },
-                    sterlingHeader
-                }).then(resp => {
-                   let response =  `END Transfer successful
-                   message: ${resp.message}
-                   response: ${resp.data.response}
-                   response text: ${resp.data.data.ResponseText}
-                   status: ${resp.data.data.status}
-                        `
-                    res.send(resp)
-                }).catch(e => {
-                    console.info(e);
-                    })
-                }
+                                let response 
+                                if (u.acctBalance < amtTran){
+                                        response = `END Insufficient funds
+                                        credit your accout to complete this transaction`
+                                        res.send(response)    
+                                 }
+                                    sterling.Account.InterbankTransferReq({
+                                        sandbox_key: sandboxKey,
+                                        payload: {
+                                            Referenceid: sTrefId,
+                                            RequestType: sTrefTyp,
+                                            Translocation: sTtransLoc,
+                                            ToAccount:acctNoToTransferTo,
+                                            Destinationbankcode: '01',
+                                            SessionID: '01',
+                                            FromAccount:acctNoToTransferTo,
+                                            Amount:  amtTran,
+                                            NEResponse: '01',
+                                            BenefiName: 'Adrian Daniels',
+                                            PaymentReference: '01',
+                                            OriginatorAccountName:'Paul Gambia',
+                                            translocation: '01'
+                                        },
+                                        sterlingHeader
+                                    }).then(resp => {
+                                    response =  `END Transfer successful 
+                                    and ${amtTran} was deducted from your account
+                                    message: ${resp.message}
+                                    response: ${resp.data.response}
+                                    response text: ${resp.data.data.ResponseText}
+                                    status: ${resp.data.data.status}
+                                            `
+                                        res.send(response)
+                                    }).catch(e => {
+                                        console.info(e);
+                                })
+                    }
               }
         else if(s =='1*2') {
             
