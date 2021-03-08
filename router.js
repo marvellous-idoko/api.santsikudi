@@ -25,6 +25,7 @@ const deposit = require('./schemas/deposits');
 const { findOne } = require("./schemas/user");
 const e = require("express");
 const { response } = require("express");
+const { info } = require("console");
 
 router.use(cookieParser());
 router.use(session({
@@ -239,7 +240,7 @@ router.post('/ussd', async (req, res) => {
  
     var amtTran;
     var s=text.toString()    
-
+    console.info(s)
         if (s == '') {
             let response;
             const uuser = new ussd()
