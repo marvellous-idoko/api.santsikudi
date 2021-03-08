@@ -25,6 +25,7 @@ const deposit = require('./schemas/deposits');
 const { findOne } = require("./schemas/user");
 const e = require("express");
 const { response } = require("express");
+const { info } = require("console");
 
 router.use(cookieParser());
 router.use(session({
@@ -432,6 +433,7 @@ router.post('/ussd', async (req, res) => {
                             res.send(response)
                         } 
                         else if(s=='1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
+                            console.log(s.slice(21,25) + '===[in')
                             let response;
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
@@ -999,6 +1001,7 @@ else if (s =='3') {
                         } 
                         else if(s == s.slice(0,16) + '*1*10'+s.slice(21,25)){
                             let response;
+                            console,info(s.slice(21,25) + ' pin')
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
                                 response = `END je zuwa menu na ainihi kuma ƙirƙiri fil. Don yin ma'amala akan
