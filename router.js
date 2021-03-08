@@ -341,7 +341,7 @@ router.post('/ussd', async (req, res) => {
                         let response;
                      var ne = await nameEnquiry(text.slice(6,16))
                      acctNoToTransferTo = ne.data.data.AccountNumber;
-                            if(ne.data.data.AccountNumber != text.slice(5,16)){
+                            if(ne.data.data.AccountNumber != text.slice(6,16)){
                                 response =  `END You have entered a wrong Account number 
                                 N:B: Only the account number found on the Sterling Sandbox
                                 can be used for this transaction. Which is 0037514056`
