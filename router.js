@@ -298,8 +298,14 @@ router.post('/ussd', async (req, res) => {
                         let response;
                      var ne = await nameEnquiry(text.slice(5,16))
                      acctNoToTransferTo = ne.data.data.AccountNumber;
+                            if(ne.data.data.AccountNumber != text.slice(5,16)){
+                                response =  `END You have entered a wrong Account number 
+                                N:B: Only the account number found on the Sterling Sandbox
+                                can be used for this transaction. Which is 0037514056`
+                                res.send(response)
+                            }
 
-                            if(ne.message == 'OK'){
+                            else if(ne.message == 'OK'){
                                 response = `CON Account details retun from the 
                                 sandbox name enquiry  
                                 message: ${ne.data.message}
@@ -837,9 +843,9 @@ else if (s =='3') {
         res.send(response);
         }
             else if(s =='2*1') {
-                 let response = `CON choose where to pay to
+                 let response = `CON choose where to pay to 
                  1. Assusun Banki
-                    2. Assusun Santsi
+                2. Assusun Santsi
                     
                     ...Santsi Kudi`
                 res.send(response);
@@ -854,8 +860,13 @@ else if (s =='3') {
                         let response;
                      var ne = await nameEnquiry(text.slice(5,16))
                      acctNoToTransferTo = ne.data.data.AccountNumber;
-
-                            if(ne.message == 'OK'){
+                            if(ne.data.data.AccountNumber != text.slice(5,16)){
+                                response =  `END Kun shigar da lambar Asusun da ba daidai ba
+                                N: B: Lambar asusun ne kawai aka samo akan Sterling Sandbox
+                                za'a iya amfani dashi don wannan ma'amala. Wanne ne 0037514056`
+                                res.send(response)
+                            }
+                            else if(ne.message == 'OK'){
                                 response = `CON Bayanan asusun sun sake dawowa daga
                                 binciken sunan sandbox 
                                 sako: ${ne.data.message}
