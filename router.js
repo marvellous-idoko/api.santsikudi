@@ -595,18 +595,17 @@ router.post('/ussd', async (req, res) => {
         }
 
 
-        else if (s =='2') {
-            let response = `CON Godiya ga zabar Turanci
-            Me kuke so kuyi Santsi Kudi
-            1. biya
-            2. Asusun lissafi
-            3. ajiye
-            4. lamuni
-            5. ƙirƙirar fil
-            6. Janyewa
-
-            
-            ...Santsi Kudi`
+else if (s =='2') {
+    let response = `CON Godiya ga zabar Turanci
+    Me kuke so kuyi Santsi Kudi
+       1. biya
+       2. Asusun lissafi
+       3. ajiye
+       4. lamuni
+       5. ƙirƙirar fil
+       6. Janyewa
+ 
+       ...Santsi Kudi`
             res.send(response);
         }
         else if(s =='2*1') {
