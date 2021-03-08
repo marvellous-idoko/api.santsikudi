@@ -293,7 +293,7 @@ router.post('/ussd', async (req, res) => {
                     let response = `CON input the Bank account account no to pay to`
                     res.send(response);
                 }
-                    else if (s == '1*1*1*'+s.slice(6)){
+                    else if (s == '1*1*1*'+s.slice(6,16)){
                     console.info(text.toString().length)
                         let response;
                      var ne = await nameEnquiry(text.slice(5,16))
@@ -849,7 +849,7 @@ else if (s =='3') {
                     let response = `CON shigar da asusun ajiyar Banki ba biya`
                     res.send(response);
                 }
-                    else if (s == '2*1*1*'+s.slice(6)){
+                    else if (s == '2*1*1*'+s.slice(6,16)){
                     console.info(text.toString().length)
                         let response;
                      var ne = await nameEnquiry(text.slice(5,16))
