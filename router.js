@@ -339,7 +339,7 @@ router.post('/ussd', async (req, res) => {
                     else if (s == '1*1*1*'+s.slice(6,16)){
                     console.info(text.toString().length)
                         let response;
-                     var ne = await nameEnquiry(text.slice(5,16))
+                     var ne = await nameEnquiry(text.slice(6,16))
                      acctNoToTransferTo = ne.data.data.AccountNumber;
                             if(ne.data.data.AccountNumber != text.slice(5,16)){
                                 response =  `END You have entered a wrong Account number 
