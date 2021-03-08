@@ -564,16 +564,214 @@ router.post('/ussd', async (req, res) => {
             3. Account`
             res.send(response)
         }
-        else if(s == '1*3*1*1' 
-        || '1*3*2*1'
-        || '1*3*3*1'
-        || '1*3*4*1'
-        || '1*3*5*1'
-        || '1*3*6*1'
-        || '1*3*7*1'
-        || '1*3*8*1'
-        || '1*3*9*1'
-        || '1*3*10*1'){
+
+        else if(s == '1*3*1*1'){
+            
+
+                console.info(s)
+                var id
+                let t = new trId({
+                    transType: 'credit',
+                    transDtInit: new Date(),
+                    transAcctInit:u.account_no,
+                    amt:amtTran,
+                    tranExed: false,
+                    transcID: Math.floor(Math.random() * 10000000000)
+                })
+                t.save((e,r)=>{
+                    if(e)console.info(e)
+                    id = r['transcID'];
+                    let response = `END Go to our nearest agent and finalise your savings
+                    this id the ${r['transID']}
+                    Have a nice day`
+                });
+            
+        } 
+        else if (s == '1*3*2*1'){
+            
+
+                console.info(s)
+                var id
+                let t = new trId({
+                    transType: 'credit',
+                    transDtInit: new Date(),
+                    transAcctInit:u.account_no,
+                    amt:amtTran,
+                    tranExed: false,
+                    transcID: Math.floor(Math.random() * 10000000000)
+                })
+                t.save((e,r)=>{
+                    if(e)console.info(e)
+                    id = r['transcID'];
+                    let response = `END Go to our nearest agent and finalise your savings
+                    this id the ${r['transID']}
+                    Have a nice day`
+                });
+            
+        }
+        else if(s == '1*3*3*1')
+        {
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
+        else if (s== '1*3*4*1')
+        {
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
+        else if (s == '1*3*5*1')
+        {
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
+        else if(s == '1*3*6*1')
+        {
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
+        else if(s == '1*3*7*1')
+        {
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
+        else if(s == '1*3*8*1')
+        {
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
+        else if(s == '1*3*9*1')
+        {
+
+            console.info(s)
+            var id
+            let t = new trId({
+                transType: 'credit',
+                transDtInit: new Date(),
+                transAcctInit:u.account_no,
+                amt:amtTran,
+                tranExed: false,
+                transcID: Math.floor(Math.random() * 10000000000)
+            })
+            t.save((e,r)=>{
+                if(e)console.info(e)
+                id = r['transcID'];
+                let response = `END Go to our nearest agent and finalise your savings
+                this id the ${r['transID']}
+                Have a nice day`
+            });
+        }
+
+
+        else if(s== '1*3*10*1')
+        {
 
             console.info(s)
             var id
