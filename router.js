@@ -339,13 +339,12 @@ router.post('/ussd', async (req, res) => {
                     else if (s == '1*1*1*'+s.slice(6,16)){
                     console.info(text.toString().length)
                         let response;
-                     var ne = await nameEnquiry(text.slice(5,16))
+                     var ne = await nameEnquiry(text.slice(6,16))
                      acctNoToTransferTo = ne.data.data.AccountNumber;
-                            if(ne.data.data.AccountNumber != text.slice(5,16)){
+                            if(ne.data.data.AccountNumber != text.slice(6,16)){
                                 response =  `END You have entered a wrong Account number 
                                 N:B: Only the account number found on the Sterling Sandbox
-                                can be used for this transaction. Which is ${text.slice(5,16)}
-                                real ${ne.data.data.AccountNumber}`
+                                can be used for this transaction. Which is ${ne.data.data.AccountNumber}`
                                 res.send(response)
                             }
 
