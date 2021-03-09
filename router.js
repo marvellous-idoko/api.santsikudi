@@ -450,7 +450,7 @@ router.post('/ussd', async (req, res) => {
                             else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(22,26)){
                             console.log(s.slice(22,26) + '===[in')
                             let response;
-                            if(s.slice(22,26) == u.pin){
+                            if(s.slice(22,26).trim() == u.pin){
                                 let response 
                                         if (u.acctBalance < amtTran){
                                                 response = `END Insufficient funds
@@ -488,12 +488,12 @@ router.post('/ussd', async (req, res) => {
                                                 console.info(e);
                                                 })
                                     }
-                                 else if (o.pin == null || undefined) {
+                                 else if (u.pin == null || undefined) {
                                 response = `END go to main menu and create a pin. To perform transactions on Santsi kudi`
                                 res.send(response)
                                 return;
                                 }
-                            else if(s.slice(22,26) != u.pin){
+                            else if(s.slice(22,26).trim() != u.pin){
                                 response = `END wrong pin, check the pin and try again later`
                                 res.send(response)
                                 return;
