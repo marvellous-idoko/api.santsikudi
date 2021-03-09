@@ -450,8 +450,16 @@ router.post('/ussd', async (req, res) => {
                             else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(22,26)){
                             console.log(s.slice(22,26) + '===[in')
                             let response;
-                            o = await ussd.findOne({contact:phoneNumber})
-                            if (o.pin == null || undefined) {
+                            ussd.findOne({contact:phoneNumber},async(e,o)=>{
+
+                            if(e){
+                                console.info(e)
+                                response = `END User Not found`
+                                res.send(response)
+                                return;
+                            }
+
+                            else if (o.pin == null || undefined) {
                                 response = `END go to main menu and create a pin. To perform transactions on Santsi kudi`
                                 res.send(response)
                                 return;
@@ -498,7 +506,8 @@ router.post('/ussd', async (req, res) => {
                                     }).catch(e => {
                                         console.info(e);
                                         })
-                }
+                            }
+                        })
               }
         else if(s =='1*2') {
             
