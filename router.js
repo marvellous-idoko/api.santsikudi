@@ -438,16 +438,16 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         } 
-                        else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*1234'){
-                            let response = `END 
-                            lenght of S is ${s.length}
-                             pin starts at ${s.slice(23)}
-                             pin starts at ${s.slice(22)}
+                        // else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*1234'){
+                        //     let response = `END 
+                        //     lenght of S is ${s.length}
+                        //      pin starts at ${s.slice(23)}
+                        //      pin starts at ${s.slice(22)}
                             
-                            `
-                            res.send(response)
-                        }
-                            else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(22,26)){
+                        //     `
+                        //     res.send(response)
+                        // }
+                            else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(22,25)){
                             console.log(s.slice(23,26) + '===[in')
                             let response;
                             o = await ussd.findOne({contact:phoneNumber})
@@ -456,12 +456,12 @@ router.post('/ussd', async (req, res) => {
                                 res.send(response)
                                 return;
                             }
-                            else if (o.pin != text.slice(23,26)){
+                            else if (o.pin != text.slice(22,25)){
                                 response = `END wrong pin, check your pin and try again later`
                                 res.send(response)
                                 return;
                             }
-                            else if (o.pin == text.slice(23,26)){
+                            else if (o.pin == text.slice(22,25)){
                                 let response 
                                 if (u.acctBalance < amtTran){
                                         response = `END Insufficient funds
