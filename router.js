@@ -438,8 +438,8 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         } 
-                        else if(s=='1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(22,26)){
-                            console.log(s.slice(22,26) + '===[in')
+                        else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(23,26)){
+                            console.log(s.slice(23,26) + '===[in')
                             let response;
                             o = await ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
@@ -447,12 +447,12 @@ router.post('/ussd', async (req, res) => {
                                 res.send(response)
                                 return;
                             }
-                            else if (o.pin != text.slice(22,26)){
+                            else if (o.pin != text.slice(23,26)){
                                 response = `END wrong pin, check your pin and try again later`
                                 res.send(response)
                                 return;
                             }
-                            else if (o.pin == text.slice(22,26)){
+                            else if (o.pin == text.slice(23,26)){
                                 let response 
                                 if (u.acctBalance < amtTran){
                                         response = `END Insufficient funds
