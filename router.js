@@ -481,7 +481,6 @@ router.post('/ussd', async (req, res) => {
                                             and ${amtTran} was deducted from your account
                                             message: ${resp.message}
                                             response: ${resp.data.response}
-                                            response text: ${resp.data.data.ResponseText}
                                             status: ${resp.data.data.status}
                                                     `
                                                 res.send(response)
@@ -1107,9 +1106,10 @@ else if (s =='3') {
                                     },
                                     sterlingHeader
                                 }).then(resp => {
-                                   let response =  `END Transfer successfull
+                                   let response =  `END Transfer successful
                                    message: ${resp.message}
                                    response: ${resp.data.response}
+                                   response text: ${resp.data.data.ResponseText}
                                    status: ${resp.data.data.status}
                                         `
                                     res.send(resp)
