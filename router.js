@@ -1005,9 +1005,9 @@ else if (s =='3') {
                             shigar da pin dinka dan kammala biyan kudi`
                             res.send(response)
                         } 
-                        else if(s=='1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
+                        else if(s=='1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(22,26)){
                             let response;
-                            console,info(s.slice(21,25) + ' pin')
+                            console,info(s.slice(22,26) + ' pin')
                             o = ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
                                 response = `END je zuwa menu na ainihi kuma ƙirƙiri fil. Don yin ma'amala akan
@@ -1015,12 +1015,12 @@ else if (s =='3') {
                                 res.send(response)
                                 return;
                             }
-                            else if (o.pin != text.slice(21,25)){
+                            else if (o.pin != text.slice(22,26)){
                                 response = `END Kuskuren kuskure, bincika fil ɗin ka sake gwadawa daga baya`
                                 res.send(response)
                                 return;
                             }
-                            else if (o.pin == text.slice(21,25)){
+                            else if (o.pin == text.slice(22,26)){
 
                                 sterling.Account.InterbankTransferReq({
                                     sandbox_key: sandboxKey,
