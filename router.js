@@ -218,7 +218,7 @@ router.post('/withdrawal', async (req, res) => {
     }
 })
         var uPin;
-        var acctNoToTransferTo;  var u;
+        var acctNoToTransferTo;  var u;    var amtTran;
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
@@ -238,7 +238,6 @@ router.post('/ussd', async (req, res) => {
     
     });
  
-    var amtTran;
     var s=text.toString()    
 
         if (s == '') {
@@ -483,9 +482,8 @@ router.post('/ussd', async (req, res) => {
                                             response =  `END Transfer successful 
                                             and ${amtTran} was deducted from your account
                                             message: ${resp.message}
-                                            response: ${resp.data.response}
-                                            response text: ${resp.data.data.ResponseText}
-                                            status: ${resp.data.data.status}
+                                            response text: ${resp.data.ResponseText}
+                                            status: ${resp.data.status}
                                                     `
                                                 res.send(response)
                                             }).catch(e => {
