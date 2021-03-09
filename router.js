@@ -438,7 +438,16 @@ router.post('/ussd', async (req, res) => {
                             input your pin to complete payment`
                             res.send(response)
                         } 
-                        else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(23,26)){
+                        else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*1'){
+                            let response = `END 
+                            lenght of S is ${s.length}
+                             pin starts at ${s.slice(23)}
+                             pin starts at ${s.slice(22)}
+                            
+                            `
+                            response.send(response)
+                        }
+                            else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(23,26)){
                             console.log(s.slice(23,26) + '===[in')
                             let response;
                             o = await ussd.findOne({contact:phoneNumber})
