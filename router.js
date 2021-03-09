@@ -450,6 +450,7 @@ router.post('/ussd', async (req, res) => {
                             else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(22,26)){
                             console.log(s.slice(22,26) + '===[in')
                             let response;
+                            var u = await ussd.findOne({contact:phoneNumber.slice(1)})
                             if(s.slice(22,26).trim() == u.pin){
                                 let response 
                                         if (u.acctBalance < amtTran){
