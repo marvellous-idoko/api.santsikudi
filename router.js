@@ -450,64 +450,111 @@ router.post('/ussd', async (req, res) => {
                             else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(22,26)){
                             console.log(s.slice(22,26) + '===[in')
                             let response;
-                            ussd.findOne({contact:phoneNumber},async(e,o)=>{
-
-                            if(e){
-                                console.info(e)
-                                response = `END User Not found`
-                                res.send(response)
-                                return;
-                            }
-
-                            else if (o.pin == null || undefined) {
+                            if(s.slice(22,26) == u.pin){
+                                let response 
+                                        if (u.acctBalance < amtTran){
+                                                response = `END Insufficient funds
+                                                credit your accout to complete this transaction`
+                                                res.send(response)    
+                                         }
+                                            sterling.Account.InterbankTransferReq({
+                                                sandbox_key: sandboxKey,
+                                                payload: {
+                                                    Referenceid: sTrefId,
+                                                    RequestType: sTrefTyp,
+                                                    Translocation: sTtransLoc,
+                                                    ToAccount:acctNoToTransferTo,
+                                                    Destinationbankcode: '01',
+                                                    SessionID: '01',
+                                                    FromAccount:acctNoToTransferTo,
+                                                    Amount:  amtTran,
+                                                    NEResponse: '01',
+                                                    BenefiName: 'Adrian Daniels',
+                                                    PaymentReference: '01',
+                                                    OriginatorAccountName:'Paul Gambia',
+                                                    translocation: '01'
+                                                },
+                                                sterlingHeader
+                                            }).then(resp => {
+                                            response =  `END Transfer successful 
+                                            and ${amtTran} was deducted from your account
+                                            message: ${resp.message}
+                                            response: ${resp.data.response}
+                                            response text: ${resp.data.data.ResponseText}
+                                            status: ${resp.data.data.status}
+                                                    `
+                                                res.send(response)
+                                            }).catch(e => {
+                                                console.info(e);
+                                                })
+                                    }
+                                 else if (o.pin == null || undefined) {
                                 response = `END go to main menu and create a pin. To perform transactions on Santsi kudi`
                                 res.send(response)
                                 return;
-                            }
-                            else if (o.pin != text.slice(22,26)){
-                                response = `END wrong pin, check your pin and try again later`
+                                }
+                            else if(s.slice(22,26) != u.pin){
+                                response = `END wrong pin, check the pin and try again later`
                                 res.send(response)
                                 return;
                             }
-                            else if (o.pin == text.slice(22,26)){
-                                let response 
-                                if (u.acctBalance < amtTran){
-                                        response = `END Insufficient funds
-                                        credit your accout to complete this transaction`
-                                        res.send(response)    
-                                 }
-                                    sterling.Account.InterbankTransferReq({
-                                        sandbox_key: sandboxKey,
-                                        payload: {
-                                            Referenceid: sTrefId,
-                                            RequestType: sTrefTyp,
-                                            Translocation: sTtransLoc,
-                                            ToAccount:acctNoToTransferTo,
-                                            Destinationbankcode: '01',
-                                            SessionID: '01',
-                                            FromAccount:acctNoToTransferTo,
-                                            Amount:  amtTran,
-                                            NEResponse: '01',
-                                            BenefiName: 'Adrian Daniels',
-                                            PaymentReference: '01',
-                                            OriginatorAccountName:'Paul Gambia',
-                                            translocation: '01'
-                                        },
-                                        sterlingHeader
-                                    }).then(resp => {
-                                    response =  `END Transfer successful 
-                                    and ${amtTran} was deducted from your account
-                                    message: ${resp.message}
-                                    response: ${resp.data.response}
-                                    response text: ${resp.data.data.ResponseText}
-                                    status: ${resp.data.data.status}
-                                            `
-                                        res.send(response)
-                                    }).catch(e => {
-                                        console.info(e);
-                                        })
-                            }
-                        })
+                        //     ussd.findOne({contact:phoneNumber},async(e,o)=>{
+
+                        //     if(e){
+                        //         console.info(e)
+                        //         response = `END User Not found`
+                        //         res.send(response)
+                        //         return;
+                        //     }
+                        //     else if (o.pin == null || undefined) {
+                        //         response = `END go to main menu and create a pin. To perform transactions on Santsi kudi`
+                        //         res.send(response)
+                        //         return;
+                        //     }
+                        //     else if (o.pin != text.slice(22,26)){
+                        //         response = `END wrong pin, check your pin and try again later`
+                        //         res.send(response)
+                        //         return;
+                        //     }
+                        //     else if (o.pin == text.slice(22,26)){
+                        //         let response 
+                        //         if (u.acctBalance < amtTran){
+                        //                 response = `END Insufficient funds
+                        //                 credit your accout to complete this transaction`
+                        //                 res.send(response)    
+                        //          }
+                        //             sterling.Account.InterbankTransferReq({
+                        //                 sandbox_key: sandboxKey,
+                        //                 payload: {
+                        //                     Referenceid: sTrefId,
+                        //                     RequestType: sTrefTyp,
+                        //                     Translocation: sTtransLoc,
+                        //                     ToAccount:acctNoToTransferTo,
+                        //                     Destinationbankcode: '01',
+                        //                     SessionID: '01',
+                        //                     FromAccount:acctNoToTransferTo,
+                        //                     Amount:  amtTran,
+                        //                     NEResponse: '01',
+                        //                     BenefiName: 'Adrian Daniels',
+                        //                     PaymentReference: '01',
+                        //                     OriginatorAccountName:'Paul Gambia',
+                        //                     translocation: '01'
+                        //                 },
+                        //                 sterlingHeader
+                        //             }).then(resp => {
+                        //             response =  `END Transfer successful 
+                        //             and ${amtTran} was deducted from your account
+                        //             message: ${resp.message}
+                        //             response: ${resp.data.response}
+                        //             response text: ${resp.data.data.ResponseText}
+                        //             status: ${resp.data.data.status}
+                        //                     `
+                        //                 res.send(response)
+                        //             }).catch(e => {
+                        //                 console.info(e);
+                        //                 })
+                        //     }
+                        // })
               }
         else if(s =='1*2') {
             
