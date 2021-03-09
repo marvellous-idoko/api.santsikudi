@@ -458,6 +458,8 @@ router.post('/ussd', async (req, res) => {
                                                 credit your accout to complete this transaction`
                                                 res.send(response)    
                                          }
+                                         console.info(acctNoToTransferTo + ": account numbe rot trasnfer to")
+                                         console.info(amtTran + ": amount to trasnfer")
                                             sterling.Account.InterbankTransferReq({
                                                 sandbox_key: sandboxKey,
                                                 payload: {
@@ -477,10 +479,12 @@ router.post('/ussd', async (req, res) => {
                                                 },
                                                 sterlingHeader
                                             }).then(resp => {
+                                                console.info(resp)
                                             response =  `END Transfer successful 
                                             and ${amtTran} was deducted from your account
                                             message: ${resp.message}
                                             response: ${resp.data.response}
+                                            response text: ${resp.data.data.ResponseText}
                                             status: ${resp.data.data.status}
                                                     `
                                                 res.send(response)
