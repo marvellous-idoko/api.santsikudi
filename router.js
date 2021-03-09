@@ -343,9 +343,15 @@ router.post('/ussd', async (req, res) => {
                      var ne = await nameEnquiry(text.slice(6,16))
                      acctNoToTransferTo = ne.data.data.AccountNumber;
                             if(ne.data.data.AccountNumber != text.slice(6,16)){
-                                response =  `END You have entered a wrong Account number 
-                                N:B: Only the account number found on the Sterling Sandbox
-                                can be used for this transaction. Which is 0037514056`
+                                response = `CON This is a sandbox environment therefore
+                                we used the account number assigned to the in Sterling Sandbox   
+                                Account details return from the 
+                                sandbox name enquiry  
+                                message: ${ne.data.message}
+                                reponse: ${ne.data.response}
+                                account number : ${ne.data.data.AccountNumber}
+                                account status : ${ne.data.data.status}
+                                select 1 to proceed`
                                 res.send(response)
                             }
 
@@ -388,7 +394,7 @@ router.post('/ussd', async (req, res) => {
                         else if(s=='1*1*1*'+s.slice(6,16) + '*1*2'){
                             
                             amtTran = 200000
-                            let response = `CON Transfering #2,000.00 to ${nacctNoToTransferToe}
+                            let response = `CON Transfering #2,000.00 to ${acctNoToTransferToe}
                             input your pin to complete payment`
                             res.send(response)
                         } else if(s=='1*1*1*'+s.slice(6,16) + '*1*3'){
@@ -403,7 +409,7 @@ router.post('/ussd', async (req, res) => {
                             res.send(response)
                         } else if (s=='1*1*1*'+s.slice(6,16) + '*1*5'){
                             amtTran = 1000000
-                            let response = `CON Transfering #10,000.00 to ${nacctNoToTransferToe}
+                            let response = `CON Transfering #10,000.00 to ${acctNoToTransferToe}
                             input your pin to complete payment`
                             res.send(response)
                         } else if (s=='1*1*1*'+s.slice(6,16) + '*1*6'){
@@ -435,7 +441,7 @@ router.post('/ussd', async (req, res) => {
                         else if(s=='1*1*1*'+s.slice(6,16) + '*1*10'+s.slice(21,25)){
                             console.log(s.slice(21,25) + '===[in')
                             let response;
-                            o = ussd.findOne({contact:phoneNumber})
+                            o = await ussd.findOne({contact:phoneNumber})
                             if (o.pin == null || undefined) {
                                 response = `END go to main menu and create a pin. To perform transactions on Santsi kudi`
                                 res.send(response)
