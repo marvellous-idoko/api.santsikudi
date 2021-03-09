@@ -445,7 +445,7 @@ router.post('/ussd', async (req, res) => {
                              pin starts at ${s.slice(22)}
                             
                             `
-                            response.send(response)
+                            res.send(response)
                         }
                             else if(s=='1*1*1*'+s.slice(6,16) + '*1*10*'+s.slice(23,26)){
                             console.log(s.slice(23,26) + '===[in')
