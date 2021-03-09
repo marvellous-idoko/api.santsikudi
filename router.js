@@ -1107,10 +1107,9 @@ else if (s =='3') {
                                     },
                                     sterlingHeader
                                 }).then(resp => {
-                                   let response =  `END Transfer successful
+                                   let response =  `END Transfer successfull
                                    message: ${resp.message}
                                    response: ${resp.data.response}
-                                   response text: ${resp.data.data.ResponseText}
                                    status: ${resp.data.data.status}
                                         `
                                     res.send(resp)
