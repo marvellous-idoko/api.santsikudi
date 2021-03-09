@@ -480,7 +480,7 @@ router.post('/ussd', async (req, res) => {
                                             }).then(resp => {
                                                 console.info(resp)
                                             response =  `END Transfer successful 
-                                            and ${amtTran} was deducted from your account
+                                            and ${parseInt(amtTran)/100} was deducted from your account
                                             message: ${resp.message}
                                             response text: ${resp.data.ResponseText}
                                             status: ${resp.data.status}
