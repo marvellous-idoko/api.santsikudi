@@ -16,6 +16,8 @@ const AT = ATs({
     apiKey: '1e4af632fde243b21fa1c28ee43fc71f3a84c6f89e6604f6b29d5afb9f328c65',
     username: 'sandbox'
 });
+var messagebird = require('messagebird')('CVQCapc6TzF4VlNLjhhU8qF12');
+
 const transIDD = require('./schemas/transactionIDs')
 // const trId = require('./schemas/transactionIDs')
 const ussd = require('./schemas/ussd') 
@@ -192,8 +194,26 @@ router.get('/rejOffer/:id', async (req, res) => {
                     console.info(e);
     })
 })
+function oo(recpt,body){
+    var messagebird = require('messagebird')('CVQCapc6TzF4VlNLjhhU8qF12')
 
+    var params = {
+      'originator': 'Santsi Kudi',
+      'recipients': [
+          '+' + recpt
+    ],
+      'body': body
+    };
+
+    messagebird.messages.create(params, function (err, response) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log(response);
+    });
+}
 router.post('/withdrawal', async (req, res) => {
+    console.info(req.body)
     try {
         const u = await userSchema.findOne({ account_no: req.body.id })
         if (u.acctBalance < parseInt(req.body.amt)) {
@@ -217,6 +237,44 @@ router.post('/withdrawal', async (req, res) => {
         console.error(ex);
     }
 })
+
+
+
+function er(){
+    console.log('called . . .')
+const mailjet = require ('node-mailjet')
+.connect('5ce373d7ff5e5eafb859cca5e36d9cbd', 'b832a63817de1ca41801d1c2edfcd923')
+const request = mailjet
+.post("send", {'version': 'v3.1'})
+.request({
+  "Messages":[
+    {
+      "From": {
+        "Email": "santsikudi@gmail.com",
+        "Name": "Santsi Kudi"
+      },
+      "To": [
+        {
+          "Email": "idokomarvelous@gmail.com",
+          "Name": "Marvellous"
+        }
+      ],
+      "Subject": "Greetings from Mailjet.",
+      "TextPart": "My first Mailjet email",
+      "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+      "CustomID": "AppGettingStartedTest"
+    }
+  ]
+})
+request
+  .then((result) => {
+    console.log(result.body)
+  })
+  .catch((err) => {
+    console.log(err.statusCode)
+  })
+}
+
         var uPin;
         var acctNoToTransferTo;  var u;    var amtTran;
 router.post('/ussd', async (req, res) => {
@@ -1526,8 +1584,12 @@ function witIDD(g){
         transcID: Math.floor(Math.random() * 10000000000),
         tranExed:false
        })
-       uio.save((e,r)=>{
+       uio.save(async(e,r)=>{
            if(e) console.error(e)
+           var u = await userSchema.findOne({account_no:g.witAcct})
+           var msg = `Dear Customer, This is your withdrawal vaucher id: ${r['transcID']}
+           Proceed to the neares santsi kudi agent to obtain your cash` 
+           oo(u.contact,msg)
            res.json(r['transcID'])
        })
     }
@@ -1566,6 +1628,9 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', async(req, res) => {
             p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(req.params.amount))
             console.info(p.acctBalance)
             var ppp = await p.save();
+            msg = `Dear Customer, ${req.params.amount} was credited to you account by ${req.params.nod}
+            on ${new Date()} your new account balance is ${p.acctBalance}`
+            oo(p.contact,msg)
             res.json(ppp)
         })
        
@@ -1642,6 +1707,10 @@ router.post('/register', (req, res, next) => {
     try {
         u.save((err, ukk) => {
             if (err) res.json({ code: 0, msg: err.message, id: null })
+            var msg = `You have been successfully registered n Santsi Kudi. 
+            Here is your Account Number ${ukk.account_no}
+            Have a nice day`
+            oo(ukk.contact,msg)
             console.info(ukk)
             res.json({ code: 1, msg: "successfully registered", user: ukk })
         })
