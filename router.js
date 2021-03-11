@@ -195,7 +195,7 @@ router.get('/rejOffer/:id', async (req, res) => {
     })
 })
 function oo(recpt,body){
-    var messagebird = require('messagebird')('CVQCapc6TzF4VlNLjhhU8qF12')
+    var messagebird = require('messagebird')('WzHypKh2PsbD6RDDIUo4vg2wn')
 
     var params = {
       'originator': 'Santsi Kudi',
