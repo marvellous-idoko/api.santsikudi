@@ -1693,7 +1693,7 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
             if (e) console.error(e)
             else if(r == null || undefined) 
-            res.json({ code: 1, name: r['fullName'], contact: r['contact'],account_no:r['account_no'] })
+            res.json({ code: 2, msg: 'not found', })
             else 
             res.json({ code: 1, name: r['fullName'], contact: r['contact'],account_no:r['account_no'] })
          })
