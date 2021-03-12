@@ -24,11 +24,9 @@ const ussd = require('./schemas/ussd')
 // import schemas here
 const userSchema = require('./schemas/user')
 const deposit = require('./schemas/deposits');
-const { findOne } = require("./schemas/user");
+const { findOne, db } = require("./schemas/user");
 const e = require("express");
-const { response } = require("express");
-const { info } = require("console");
-
+const dbt = require('./schemas/debits')
 router.use(cookieParser());
 router.use(session({
     secret: 'keyboard cat',
@@ -213,28 +211,32 @@ function oo(recpt,body){
     });
 }
 router.post('/withdrawal', async (req, res) => {
-    console.info(req.body)
     try {
         const u = await userSchema.findOne({ account_no: req.body.id })
         if (u.acctBalance < parseInt(req.body.amt)) {
-            res.json({ code: 00, msg: "insuficient funds" });
+            res.json({ code: 00, msg: "insuficient funds. Credit your account to complet this transaction" });
             return;
         }
-        u.acctBalance = Math.ceil(u.acctBalance - parseInt(req.body.amt));
-
-        const result = await AT.SMS.send({
-            to: '+2347057537572',
-            message: `Hello ${u.fullName} "\n" ${u.account_no} "\n" ${req.body.amt} was
-           withdrawn from your account. Thank you `,
-            from: 'Santsi Kudi'
-        });
-        console.log(result);
-        res.json({
-            msg: 'Successful withdrawal from your account , open the Africa' +
-                'Talking simuator to view your alert'
+        u.acctBalance = Math.ceil(parseInt(u.acctBalance) - parseInt(req.body.amt));
+        u.save((e,j)=>{
+            msg=`Dear customer, #${req.body.amt} was withdrawn from your account on ${new Date()}.
+            Your new account Balance is ${u.acctBalance}`
+            var op = new dbt();
+            op.dateOfTransaction = new Date();
+            op.amtWitdrawn = req.body.amt;
+            op.refNo = Math.floor(Math.random() * 10000000000)
+            op.account_no = req.body.id
+            op.save((e,p)=>{
+                if(e) throw e;
+                console.log(p)
+            oo(u.contact,msg)
+            res.json({
+                msg: msg
+            })
+            })
         })
-    } catch (ex) {
-        console.error(ex);
+    } catch (e) {
+        console.error(e +"\n "+ e['msg']);
     }
 })
 
@@ -1551,7 +1553,25 @@ router.post('/withID',  async(req,res)=>{
         res.json({ code: 00, msg: "insuficient funds" });
         return;
     }
-    witIDD(req.body)
+    var uio = new transIDD({
+        transType:'Debit',
+        transDtInit: new Date(),
+        amt:req.body.amt,
+        witAcct:req.body.witAcct,
+        witName:req.body.witName,
+        transcID: Math.floor(Math.random() * 10000000000),
+        tranExed:false
+       })
+       uio.save(async(e,r)=>{
+           if(e) console.error(e)
+           var u = await userSchema.findOne({account_no:req.body.witAcct})
+           var msg = `Dear Customer, This is your withdrawal voucher id: ${r['transcID']}
+           Proceed to the neares santsi kudi agent to obtain your cash` 
+           oo(u.contact,msg)
+           res.json(r['transcID'])
+       })
+
+    // witIDD()
 })
 router.post('/genTranID',(req,res)=>{
     try{  
@@ -1566,8 +1586,13 @@ router.post('/genTranID',(req,res)=>{
         transcID: Math.floor(Math.random() * 10000000000),
         tranExed:false
        })
-       uio.save((e,r)=>{
+       uio.save(async(e,r)=>{
            if(e) console.error(e)
+            p =  await userSchema({account_no:req.body.aor})          
+            msg = `This is your transaction voucher ID ${r.transcID}
+            This transaction of was initiated on ${new Date()}
+            Go to the nearest santsi Kudi Agent to complete yout transaction`
+            oo(p.contact,msg)
             res.json(r)
        })
     }catch(e){
@@ -1575,24 +1600,7 @@ router.post('/genTranID',(req,res)=>{
     }
 })
 function witIDD(g){
-    var uio = new transIDD({
-        transType:'Debit',
-        transDtInit: new Date(),
-        amt:g.amt,
-        witAcct:g.witAcct,
-        witName:g.witName,
-        transcID: Math.floor(Math.random() * 10000000000),
-        tranExed:false
-       })
-       uio.save(async(e,r)=>{
-           if(e) console.error(e)
-           var u = await userSchema.findOne({account_no:g.witAcct})
-           var msg = `Dear Customer, This is your withdrawal vaucher id: ${r['transcID']}
-           Proceed to the neares santsi kudi agent to obtain your cash` 
-           oo(u.contact,msg)
-           res.json(r['transcID'])
-       })
-    }
+        }
 function getTrID(g){
     var uio = new transIDD({
         transType:'credit',
@@ -1626,10 +1634,10 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', async(req, res) => {
             if (e) throw 0;
             const p = await userSchema.findOne({ account_no:req.params.aor })
             p.acctBalance = Math.ceil(parseInt(p.acctBalance) + parseInt(req.params.amount))
-            console.info(p.acctBalance)
             var ppp = await p.save();
             msg = `Dear Customer, ${req.params.amount} was credited to you account by ${req.params.nod}
             on ${new Date()} your new account balance is ${p.acctBalance}`
+            console.info(ppp.acctBalance)
             oo(p.contact,msg)
             res.json(ppp)
         })
@@ -1647,11 +1655,12 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', async(req, res) => {
     } catch (e) {
         res.json({ code: 0, error: e })
     }
-})
-router.get('/retrDebit/:account_no', (req, res) => {
+}).get('/retrDebit/:account_no', (req, res) => {
+    console.info(req.params.account_no )
     try {
-        witdraw.find({ account_no: req.params.account_no }, (e, r) => {
+        dbt.find({ account_no: req.params.account_no }, (e, r) => {
             if (e) { r.json({ code: 0, error: e }); throw "unable to retrieve withdrawal history" }
+            console.info(r)
             res.json(r)
         })
     } catch (e) {
@@ -1674,8 +1683,11 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     try {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
             if (e) throw "accouont doesn't exist on santsii kudi"
+            else if(r == null || undefined) 
             res.json({ code: 1, name: r['fullName'], contact: r['contact'],account_no:r['account_no'] })
-        })
+            else 
+            res.json({ code: 1, name: r['fullName'], contact: r['contact'],account_no:r['account_no'] })
+         })
     }
     catch (err) {
         res.json({ code: 0, msg: err })
