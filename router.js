@@ -278,7 +278,7 @@ request
 }
 
         var uPin;
-        var acctNoToTransferTo;  var u;    var amtTran;
+        var acctNoToTransferTo;  var u;    var amtTran; var recsantsID, senderSantsiID
 router.post('/ussd', async (req, res) => {
     let { sessionId, serviceCode, phoneNumber, text } = req.body;
     // console.log(req.body)
@@ -353,7 +353,15 @@ router.post('/ussd', async (req, res) => {
                     let response =  `Input the Santsi Kudi Account to credit`
                     res.send(response) 
                         }
-                    else if(s == '1*1*2*'+s.slice(6,16)){
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        else if(s == '1*1*2*'+s.slice(6,16)){
                       let response;
                         var uyt = await userSchema({account_no:slice(6,16)})
                         if(uyt == null || undefined){
@@ -368,6 +376,7 @@ router.post('/ussd', async (req, res) => {
                         res.send(res)
                     }
                         else if(s == '1*1*2*'+s.slice(6,16) +'*1'){
+                            
                             let t = new deposit({
                                 dateOfTransaction: new Date(),
                                 nameOfDepostor: u.fullName,
@@ -1682,7 +1691,7 @@ router.get('/retrAcctBal/:account_no', (req, res) => {
     console.info(req.params.account_no)
     try {
         userSchema.findOne({ account_no: req.params.account_no }, (e, r) => {
-            if (e) throw "accouont doesn't exist on santsii kudi"
+            if (e) console.error(e)
             else if(r == null || undefined) 
             res.json({ code: 1, name: r['fullName'], contact: r['contact'],account_no:r['account_no'] })
             else 
