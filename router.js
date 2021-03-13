@@ -62,6 +62,7 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
         host: 'https://sandboxapi.fsi.ng'
     }).then(async r => {
         console.log(r)
+        // res.json(r)
         switch (r) {
             case undefined: {
                 const data = {
@@ -77,18 +78,18 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
                     "EnrollmentBranch": "Victoria Island",
                     "WatchListed": "NO"
                 }
+
                 const p = await userSchema.findOne({ account_no: req.params.id })
                 p.bvn = data;
                 p.verified = true;
                 var ff = await p.save()
                 res.json(ff)
-                // res.json()
             } default: {
                 var p = await userSchema.findOne({ account_no: req.params.id })
                 p.bvn = r['data'];
                 p.verified = true;
                 var ff = await p.save()
-                res.json(ff)
+                // res.json(ff)
             }
         }
     })
@@ -192,7 +193,7 @@ router.get('/rejOffer/:id', async (req, res) => {
                     console.info(e);
     })
 })
-function oo(recpt,body){
+function ool(recpt,body){
     var messagebird = require('messagebird')('S2TCrkC1qKWWTHhqg4Utau2J5')
 
     var params = {
@@ -229,7 +230,7 @@ router.post('/withdrawal', async (req, res) => {
             op.save((e,p)=>{
                 if(e) throw e;
                 console.log(p)
-            oo(u.contact,msg)
+            oo(u.email,u.fullName,msg)
             res.json({
                 msg: msg
             })
@@ -242,7 +243,7 @@ router.post('/withdrawal', async (req, res) => {
 
 
 
-function er(){
+function oo(email,fullName,msg){
     console.log('called . . .')
 const mailjet = require ('node-mailjet')
 .connect('5ce373d7ff5e5eafb859cca5e36d9cbd', 'b832a63817de1ca41801d1c2edfcd923')
@@ -257,13 +258,13 @@ const request = mailjet
       },
       "To": [
         {
-          "Email": "idokomarvelous@gmail.com",
-          "Name": "Marvellous"
+          "Email": email,
+          "Name": fullName
         }
       ],
-      "Subject": "Greetings from Mailjet.",
-      "TextPart": "My first Mailjet email",
-      "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+      "Subject": "Notification from Santsi Kudi",
+      "TextPart": msg,
+      "HTMLPart": `<p>${msg}</>`,
       "CustomID": "AppGettingStartedTest"
     }
   ]
@@ -1576,7 +1577,7 @@ router.post('/withID',  async(req,res)=>{
            var u = await userSchema.findOne({account_no:req.body.witAcct})
            var msg = `Dear Customer, This is your withdrawal voucher id: ${r['transcID']}
            Proceed to the neares santsi kudi agent to obtain your cash` 
-           oo(u.contact,msg)
+           oo(u.email,u.fullName,msg)
            res.json(r['transcID'])
        })
 
@@ -1601,7 +1602,7 @@ router.post('/genTranID',(req,res)=>{
             msg = `This is your transaction voucher ID ${r.transcID}
             This transaction of was initiated on ${new Date()}
             Go to the nearest santsi Kudi Agent to complete yout transaction`
-            oo(p.contact,msg)
+            oo(p.email,p.fullName,msg)
             res.json(r)
        })
     }catch(e){
@@ -1647,7 +1648,7 @@ router.get('/updAcct/:amount/:refNo/:nod/:aod/:aor/:nor', async(req, res) => {
             msg = `Dear Customer, ${req.params.amount} was credited to you account by ${req.params.nod}
             on ${new Date()} your new account balance is ${p.acctBalance}`
             console.info(ppp.acctBalance)
-            oo(p.contact,msg)
+            oo(p.email,p.fullName,msg)
             res.json(ppp)
         })
        
@@ -1731,7 +1732,7 @@ router.post('/register', (req, res, next) => {
             var msg = `You have been successfully registered n Santsi Kudi. 
             Here is your Account Number ${ukk.account_no}
             Have a nice day`
-            oo(ukk.contact,msg)
+            oo(ukk.email,ukk.fullName,msg)
             console.info(ukk)
             res.json({ code: 1, msg: "successfully registered", user: ukk })
         })
