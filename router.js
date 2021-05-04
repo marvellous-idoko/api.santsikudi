@@ -24,6 +24,7 @@ const ussd = require('./schemas/ussd')
 // import schemas here
 const userSchema = require('./schemas/user')
 const deposit = require('./schemas/deposits');
+const deU = require('./schemas/addDEU');
 const { findOne, db } = require("./schemas/user");
 const e = require("express");
 const dbt = require('./schemas/debits')
@@ -145,7 +146,7 @@ router.post('/submitOffer', async (req, res) => {
 router.get('/getOffers/:id', async (req, res) => {
     res.json(await offer.find({ id: req.params.id }))
 })
-router.get('/rejOffer/:id', async (req, res) => {
+router.get('/ nvny/:id', async (req, res) => {
     var s = await offer.findOne({ loanId: req.params.id })
     s.accepted = false;
     s.save()
@@ -239,7 +240,36 @@ router.post('/withdrawal', async (req, res) => {
     } catch (e) {
         console.error(e +"\n "+ e['msg']);
     }
+}).post('/addReg', async(req,res)=>{
+    console.info(req.body)
+    const u = new deU();
+    u.fullName = req.body.fullName;
+    u.email = req.body.email;
+    u.password = req.body.password;
+     u.save((e,r)=>{
+        if(e) res.send('unable to register')
+        else{
+            console.info(r)
+            res.json('successfully registered user')
+        }
+    })
+   
+}).post('/addLogin', async(req,res) =>{
+    
+    try{
+       deU.findOne({email:req.body.email},async(e,r)=>{
+           if(e)console.info(e)
+           else{
+               if(r['password']==req.body.password) res.json(r)
+           }
+       })
+        // res.json(d)
+    }
+    catch(e){ 
+        res.json('error signing in  . . . ')
+    }
 })
+
 
 
 
@@ -904,7 +934,7 @@ router.post('/ussd', async (req, res) => {
         }
 
 
-        else if(s == '1*3*6*1')
+        else if(s == 'f1*3*6*1')
         {
 
             console.info(s)
