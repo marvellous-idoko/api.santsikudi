@@ -21,13 +21,11 @@ const loan = mongoose.Schema({
         type: String,
         required: true
     },
-
     amount: {
         type: Number,
         required: true
     },
     VCOffer: {
-
         intRate: {
             type: String
         },
@@ -43,8 +41,6 @@ const loan = mongoose.Schema({
         acctId:{
             type: String
         }
-
-
     },
     dateOfRequest: {
         type: Date,
@@ -55,7 +51,6 @@ const loan = mongoose.Schema({
     },
     repaid: {
         type: Boolean
-
     },
     accepted: {
         type: Boolean
@@ -69,6 +64,10 @@ const loan = mongoose.Schema({
     },
     acctId: {
         type: String,
+        required:true
+    },
+    views: {
+        type: Number,
         required:true
     }
 });

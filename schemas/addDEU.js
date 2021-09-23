@@ -8,11 +8,10 @@ const usr = mongoose.Schema({
     email: {
         type: String,
         required: true
-    },
+    }, 
     password: {
         type: String,
         required: true
     },
-    
-});
+})
 const usrr = module.exports = mongoose.model('usr', usr);
