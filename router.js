@@ -349,11 +349,11 @@ router.post('/loan', async (req, res) => {
         // });
     }
 }).post('/payloan/:id',async (req,res)=>{
-    ha = await loan.findOne({loanId:req.params.id})
-    var interest = parseFloat(ha.amount) * parseFloat(ha.intRate)
-    var amt = interest + parseFloat(ha.amount)
-    var charge = amt * 0.03
-   var total = amt + charge
+//     ha = await loan.findOne({loanId:req.params.id})
+//     var interest = parseFloat(ha.amount) * parseFloat(ha.intRate)
+//     var amt = interest + parseFloat(ha.amount)
+//     var charge = amt * 0.03
+//    var total = amt + charge
     tokenGenerator().then(t=>{
         var opons = {
             'method': 'POST',
