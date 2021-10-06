@@ -122,6 +122,24 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
     var k = await loan.find({ loanId: req.params.id })
     res.json(k)
 })
+var tokenGenerator =  ()=>{
+    var h
+    var options = {
+        'method': 'POST',
+        'url': 'https://developer.ecobank.com/corporateapi/user/token',
+        'headers': {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Origin': 'developer.ecobank.com'
+        },
+        body: '{ "userId": "iamaunifieddev103",  "password": "$2a$10$Wmame.Lh1FJDCB4JJIxtx.3SZT0dP2XlQWgj9Q5UAGcDLpB0yRYCC"}'
+    };
+    return request(options)
+ 
+    // , async function(error, response) {
+    //     if (error) throw new Error(error);
+    // });
+}
 router.post('/loan', async (req, res) => {
     var k = new loan({ 
         reason: req.body.a.reason,
@@ -137,133 +155,137 @@ router.post('/loan', async (req, res) => {
     })
     p = await k.save()
     res.json(p)
-}).post('/jk', (req, res) => {
+}).post('/jk', async (req, res) => {
+    tokenGenerator().then(t=>{
+        var opons = {
+            'method': 'POST',
+            'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
+            'headers': { 
+                'Authorization': t.body.slice(41,t.body.length - 2),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': 'developer.ecobank.com'
+            },
+            body: JSON.stringify({
+                "paymentDetails": {
+                    "requestId": "4466",
+                    "productCode": "GMT112",
+                    "amount": "50035",
+                    "currency": "NGN",
+                    "locale": "en_AU",
+                    "orderInfo": "255s353",
+                    "returnUrl": "https://unifiedcallbacks.com/corporateclbkservice/callback/qr"
+                },
+                "merchantDetails": {
+                    "accessCode": "79742570",
+                    "merchantID": "ETZ001",
+                    "secureSecret": "sdsffd"
+                },
+                // "secureHash":"85dc50e24f6f36850f48390be3516c518acdc427c5c5113334c1c3f0ba122cdd37b06a10b82f7ddcbdade8d8ab92165e25ea4566f6f8a7e50f3c9609d8ececa4"
+                "secureHash": "7f137705f4caa39dd691e771403430dd23d27aa53cefcb97217927312e77847bca6b8764f487ce5d1f6520fd7227e4d4c470c5d1e7455822c8ee95b10a0e9855"
+            })
+    
+        };
+    
+        request(opons, function (error, response) {
+            if (error) throw new Error(error);
+            console.log(response.body);
+        });
+    })
     console.info("pp")
-    var options = {
-        'method': 'GET',
-        'url': 'https://fsi-core-dev.inits.dev/api/sterling/TransferAPIs/api/Spay/InterbankNameEnquiry?Referenceid=01&RequestType=01&Translocation=01&ToAccount=0037514056&destinationbankcode=000001',
-        'headers': {
-            'Sandbox-Key': 'x9ovvrQ503lrktm3mPkBPcjm2bWJJGX81626311488',
-            'Ocp-Apim-Subscription-Key': 't',
-            'Ocp-Apim-Trace': 'true',
-            'Appid': '69',
-            'Content-Type': 'application/json',
-            'ipval': '0'
-        }
-    };
-    var oppptions = {
-        'method': 'GET',
-        'url': 'https://fsi-core-dev.inits.dev/api/sterling/billpaymentapi/api/Spay/GetBillerPmtItemsRequest?Referenceid=01&RequestType=01&Translocation=01&Bvn=1937247024021&billerid=01',
-        'headers': {
-            'Sandbox-Key': 'x9ovvrQ503lrktm3mPkBPcjm2bWJJGX81626311488',
-            'Ocp-Apim-Subscription-Key': 't',
-            'Content-Type': 'application/json'
-        }
-    };
-    var woptions = {
-        'method': 'POST',
-        'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
-        'headers': {
-            //   'Authorization': 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJpYW1hdW5pZmllZGRldjEwMyIsImV4cCI6MTYyNjc1MDQ4MywiaWF0IjoxNjI2NzQzMjgzLCJpc3MiOiJjb20uZWNvYmFuay5jb3Jwb3JhdGVhcGkiLCJqdGkiOiJlZjEzOTljZS1lOGY2LTExZWItODRlOC02ZDA0ZTRmYjMyNTkifQ.XcTtnURz1vkZ3ICM73bACbS9ryVRPXzVxjT3hc7rhjkB1HxYScE6L3m6QlrXZLA7cnBoEXRDKet3foc78WATILLr8vWKR27pV9avvHiK6rvSWdTWlWDnWUKrF8UTBk1cBN1j2QngHvJ2v9ic60BvbsQ1JjhhQAKsdOyaH1xEURT2gdLRvrvBm5CjovJuHlmcoN95gjgQwqCazdZCls3H_2-vxoLReTzbSzlp8FfSvUNrN23bdnqcdFFcur2XG2niP0lzSnyQW-OPyI6BkqdvjFB1dEvwqM9j0OtnBQsx3rMgP-TWd0B91MsLdipHDPxIcYafOi5Zwgx8F6Tj9L7hTw',
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Origin': 'developer.ecobank.com',
-            'Sandbox-Key': 't'
+    // var options = {
+    //     'method': 'GET',
+    //     'url': 'https://fsi-core-dev.inits.dev/api/sterling/TransferAPIs/api/Spay/InterbankNameEnquiry?Referenceid=01&RequestType=01&Translocation=01&ToAccount=0037514056&destinationbankcode=000001',
+    //     'headers': {
+    //         'Sandbox-Key': 'x9ovvrQ503lrktm3mPkBPcjm2bWJJGX81626311488',
+    //         'Ocp-Apim-Subscription-Key': 't',
+    //         'Ocp-Apim-Trace': 'true',
+    //         'Appid': '69',
+    //         'Content-Type': 'application/json',
+    //         'ipval': '0'
+    //     }
+    // };
+    // var oppptions = {
+    //     'method': 'GET',
+    //     'url': 'https://fsi-core-dev.inits.dev/api/sterling/billpaymentapi/api/Spay/GetBillerPmtItemsRequest?Referenceid=01&RequestType=01&Translocation=01&Bvn=1937247024021&billerid=01',
+    //     'headers': {
+    //         'Sandbox-Key': 'x9ovvrQ503lrktm3mPkBPcjm2bWJJGX81626311488',
+    //         'Ocp-Apim-Subscription-Key': 't',
+    //         'Content-Type': 'application/json'
+    //     }
+    // };
+    // var woptions = {
+    //     'method': 'POST',
+    //     'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
+    //     'headers': {
+    //         //   'Authorization': 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJpYW1hdW5pZmllZGRldjEwMyIsImV4cCI6MTYyNjc1MDQ4MywiaWF0IjoxNjI2NzQzMjgzLCJpc3MiOiJjb20uZWNvYmFuay5jb3Jwb3JhdGVhcGkiLCJqdGkiOiJlZjEzOTljZS1lOGY2LTExZWItODRlOC02ZDA0ZTRmYjMyNTkifQ.XcTtnURz1vkZ3ICM73bACbS9ryVRPXzVxjT3hc7rhjkB1HxYScE6L3m6QlrXZLA7cnBoEXRDKet3foc78WATILLr8vWKR27pV9avvHiK6rvSWdTWlWDnWUKrF8UTBk1cBN1j2QngHvJ2v9ic60BvbsQ1JjhhQAKsdOyaH1xEURT2gdLRvrvBm5CjovJuHlmcoN95gjgQwqCazdZCls3H_2-vxoLReTzbSzlp8FfSvUNrN23bdnqcdFFcur2XG2niP0lzSnyQW-OPyI6BkqdvjFB1dEvwqM9j0OtnBQsx3rMgP-TWd0B91MsLdipHDPxIcYafOi5Zwgx8F6Tj9L7hTw',
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json',
+    //         'Origin': 'developer.ecobank.com',
+    //         'Sandbox-Key': 't'
 
-        },
-        body: JSON.stringify({
-            "paymentDetails": {
-                "requestId": "4466",
-                "productCode": "GMT112",
-                "amount": "50035",
-                "currency": "GBP",
-                "locale": "en_AU",
-                "orderInfo": "255s353",
-                "returnUrl": "https://unifiedcallbacks.com/corporateclbkservice/callback/qr"
-            },
-            "merchantDetails": {
-                "accessCode": "79742570",
-                "merchantID": "ETZ001",
-                "secureSecret": "sdsffd"
-            },
-            "secureHash": "85dc50e24f6f36850f48390be3516c518acdc427c5c5113334c1c3f0ba122cdd37b06a10b82f7ddcbdade8d8ab92165e25ea4566f6f8a7e50f3c9609d8ececa4"
-        })
+    //     },
+    //     body: JSON.stringify({
+    //         "paymentDetails": {
+    //             "requestId": "4466",
+    //             "productCode": "GMT112",
+    //             "amount": "50035",
+    //             "currency": "GBP",
+    //             "locale": "en_AU",
+    //             "orderInfo": "255s353",
+    //             "returnUrl": "https://unifiedcallbacks.com/corporateclbkservice/callback/qr"
+    //         },
+    //         "merchantDetails": {
+    //             "accessCode": "79742570",
+    //             "merchantID": "ETZ001",
+    //             "secureSecret": "sdsffd"
+    //         },
+    //         "secureHash": "85dc50e24f6f36850f48390be3516c518acdc427c5c5113334c1c3f0ba122cdd37b06a10b82f7ddcbdade8d8ab92165e25ea4566f6f8a7e50f3c9609d8ececa4"
+    //     })
 
-    };
-    var options = {
-        'method': 'POST',
-        'url': 'https://fsi-core-dev.inits.dev/api/v1/fcmb/payments/nip/transfers',
-        'headers': {
-            'sandbox-key': 'x9ovvrQ503lrktm3mPkBPcjm2bWJJGX81626311488',
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'x-ibm-client-id': 'f'
-        },
-        body: JSON.stringify({
-            "nameEnquiryRef": "999214190218121217000001177403",
-            "destinationInstitutionCode": "999063",
-            "channelCode": "2",
-            "beneficiaryAccountNumber": "0000000000",
-            "beneficiaryAccountName": "OBIOHA O. GODDY",
-            "beneficiaryBankVerificationNumber": "1",
-            "beneficiaryKYCLevel": "3",
-            "originatorAccountName": "OKUBOTE IDOWU OLUWAKEMI",
-            "originatorAccountNumber": "0000000000",
-            "transactionNarration": "Esb Test",
-            "paymentReference": "12345",
-            "amount": "100.1",
-            "traceId": "12345",
-            "chargeAmount": "52.59",
-            "platformType": "ESB"
-        })
+    // };
+    // var options = {
+    //     'method': 'POST',
+    //     'url': 'https://fsi-core-dev.inits.dev/api/v1/fcmb/payments/nip/transfers',
+    //     'headers': {
+    //         'sandbox-key': 'x9ovvrQ503lrktm3mPkBPcjm2bWJJGX81626311488',
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json',
+    //         'x-ibm-client-id': 'f'
+    //     },
+    //     body: JSON.stringify({
+    //         "nameEnquiryRef": "999214190218121217000001177403",
+    //         "destinationInstitutionCode": "999063",
+    //         "channelCode": "2",
+    //         "beneficiaryAccountNumber": "0000000000",
+    //         "beneficiaryAccountName": "OBIOHA O. GODDY",
+    //         "beneficiaryBankVerificationNumber": "1",
+    //         "beneficiaryKYCLevel": "3",
+    //         "originatorAccountName": "OKUBOTE IDOWU OLUWAKEMI",
+    //         "originatorAccountNumber": "0000000000",
+    //         "transactionNarration": "Esb Test",
+    //         "paymentReference": "12345",
+    //         "amount": "100.1",
+    //         "traceId": "12345",
+    //         "chargeAmount": "52.59",
+    //         "platformType": "ESB"
+    //     })
 
-    };
-    var ions = {
-        'method': 'POST',
-        'url': 'https://developer.ecobank.com/corporateapi/user/token',
-        'headers': {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Origin': 'developer.ecobank.com'
-        },
-        body: '{ "userId": "iamaunifieddev103",  "password": "$2a$10$Wmame.Lh1FJDCB4JJIxtx.3SZT0dP2XlQWgj9Q5UAGcDLpB0yRYCC"}'
+    // };
+    // var ions = {
+    //     'method': 'POST',
+    //     'url': 'https://developer.ecobank.com/corporateapi/user/token',
+    //     'headers': {
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json',
+    //         'Origin': 'developer.ecobank.com'
+    //     },
+    //     body: '{ "userId": "iamaunifieddev103",  "password": "$2a$10$Wmame.Lh1FJDCB4JJIxtx.3SZT0dP2XlQWgj9Q5UAGcDLpB0yRYCC"}'
 
-    };
+    // };
     //   eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJpYW1hdW5pZmllZGRldjEwMyIsImV4cCI6MTYyOTUxMzAzMywiaWF0IjoxNjI5NTA1ODMzLCJpc3MiOiJjb20uZWNvYmFuay5jb3Jwb3JhdGVhcGkiLCJqdGkiOiJmZWZiMjI3NC0wMjE2LTExZWMtOGU0OS1hYmY5NzJhNTkyYjQifQ.Dq5SvfamdPl3DGkk55SMvjuYe1SHwJrXbwbMwbRLeY-tes-fVRB8XE-HtanzbvUwEL8JzmvbBm3l8SI0-T_fiIeGnYFUQRm9EeZlRbp3brD68prPl6XXWzgV6Sbx4zCryRbejPvTVllZA5AsaBvb5nz6dwcIflM1kFU-XkNLburDMl5XexMmBk8pbOfY3d3P1gv-iH54vcjF1Zg4NWfC9jbqkphKT8plOnOFMTiWKPAXhwMM9XVVDIKQwjmIi9bap3yG_Pi1cKs-7wg8w1Yes67Mhr9_iKUMVKnL1vgmOkE5JB-M2zuWm7ZqcVYrK5mx4QhI0w070mVrq2J3hJuq0g
 
-    var opons = {
-        'method': 'POST',
-        'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
-        'headers': {
-            'Authorization': 'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJpYW1hdW5pZmllZGRldjEwMyIsImV4cCI6MTYyOTYwMjQxMiwiaWF0IjoxNjI5NTk1MjEyLCJpc3MiOiJjb20uZWNvYmFuay5jb3Jwb3JhdGVhcGkiLCJqdGkiOiIxOTQ0YzFkNy0wMmU3LTExZWMtYTA0Mi1mZjQ4MGJlOTE1OTkifQ.b7Oc9a9ABMEi2pEy9haiWc_To2y-kSM7yGrEL5zjTF0X0xAFXwui5ACCiYEHDGuoGCIaAiL57evry2Fkc2lkmtAoNTmHNqBzXV-G4lJGYf4sdmpyGQbmSoBHsUXSYab-kWXQ2DHroHbJwW3WTT7MgY1ZnrmflZJN2Y0SY8SjBAAttGaq-p7M8R3x_VtkfG50bPe3LiZCknMKIrUhP5xiizkZ8DJtdjtLTn7lTCVD9th9_evJdZEYnXVAOWkwMKfFKNy0cCA3keZKPMhUwpBT5YnF-DfGExTXlu7q57V0QdFiz1JErICvNVrA0T7ytXQWFbt-PZbKvcsk_Jyo2MSqVA',
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Origin': 'developer.ecobank.com'
-        },
-        body: JSON.stringify({
-            "paymentDetails": {
-                "requestId": "4466",
-                "productCode": "GMT112",
-                "amount": "50035",
-                "currency": "NGN",
-                "locale": "en_AU",
-                "orderInfo": "255s353",
-                "returnUrl": "https://unifiedcallbacks.com/corporateclbkservice/callback/qr"
-            },
-            "merchantDetails": {
-                "accessCode": "79742570",
-                "merchantID": "ETZ001",
-                "secureSecret": "sdsffd"
-            },
-            "secureHash": "7f137705f4caa39dd691e771403430dd23d27aa53cefcb97217927312e77847bca6b8764f487ce5d1f6520fd7227e4d4c470c5d1e7455822c8ee95b10a0e9855"
-        })
-
-    };
-
-    request(opons, function (error, response) {
-        if (error) throw new Error(error);
-        console.log(response.body);
-    });
+   
 
     {
         // var options = {
@@ -326,6 +348,50 @@ router.post('/loan', async (req, res) => {
         //     console.log(response.header+"header");
         // });
     }
+}).post('/payloan/:id',async (req,res)=>{
+    ha = await loan.findOne({loanId:req.params.id})
+    var interest = parseFloat(ha.amount) * parseFloat(ha.intRate)
+    var amt = interest + parseFloat(ha.amount)
+    var charge = amt * 0.03
+   var total = amt + charge
+    tokenGenerator().then(t=>{
+        var opons = {
+            'method': 'POST',
+            'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
+            'headers': { 
+                'Authorization': t.body.slice(41,t.body.length - 2),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': 'developer.ecobank.com'
+            },
+            body: JSON.stringify({
+                "paymentDetails": {
+                    "requestId": '4466',
+                    "productCode": "GMT112",
+                    "amount": "220300000",
+                    "currency": "NGN",
+                    "locale": "en_AU",
+                    "orderInfo": '255s353',
+                    "returnUrl": "https://unifiedcallbacks.com/corporateclbkservice/callback/qr"
+                },
+                "merchantDetails": {
+                    "accessCode": "79742570",
+                    "merchantID": "ETZ001",
+                    "secureSecret": "sdsffd"
+                },
+                // "secureHash":"85dc50e24f6f36850f48390be3516c518acdc427c5c5113334c1c3f0ba122cdd37b06a10b82f7ddcbdade8d8ab92165e25ea4566f6f8a7e50f3c9609d8ececa4"
+                "secureHash": "7f137705f4caa39dd691e771403430dd23d27aa53cefcb97217927312e77847bca6b8764f487ce5d1f6520fd7227e4d4c470c5d1e7455822c8ee95b10a0e9855"
+            })
+        };
+        request(opons, function (error, response) {
+            if (error) throw new Error(error);
+            console.log(response.body);
+            res.json(response.body.slice(response.body.search('https://')).slice(0,response.body.slice(response.body.search('https://')).search('"')))
+
+        });
+    })
+    var hy = '{"response_code":200,"response_message":"success","response_content":"https://migs-mtf.mastercard.com.au/vpcpay?vpc_AccessCode=79742570&vpc_Amount=50035&vpc_Version=1&vpc_MerchTxnRef=4466&vpc_OrderInfo=255s353&vpc_Command=pay&vpc_Currency=NGN&vpc_Merchant=ETZ001&vpc_Locale=en_AU&vpc_ReturnURL=https%3A%2F%2Funifiedcallbacks.com%2Fcorporateclbkservice%2Fcallback%2Fqr&vpc_SecureHash=9037D4B97CE9508D16DCC69D1DAE46F3533C996351ED96AC05638CBF323BE243&vpc_SecureHashType=SHA256","response_timestamp":"2021-10-03T01:59:31.722"}'
+    // console.info("pp")
 })
 
 router.post('/submitOffer', async (req, res) => {
@@ -355,7 +421,7 @@ router.post('/submitOffer', async (req, res) => {
 router.get('/getOffers/:id', async (req, res) => {
     res.json(await offer.find({ id: req.params.id }))
 })
-router.get('/ nvny/:id', async (req, res) => {
+router.get('/nvny/:id', async (req, res) => {
     var s = await offer.findOne({ loanId: req.params.id })
     s.accepted = false;
     s.save()
