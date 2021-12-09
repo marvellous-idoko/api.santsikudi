@@ -203,7 +203,10 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
     
     let id =  req.query.vpc_MerchTxnRef
     let msg = req.query.vpc_Message
-    console.info( msg + "  97 " + id)
+    let a = await loan.findOne({loanId:req.query.vpc_MerchTxnRef})
+    a.paid = true
+    let str = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Funds Transfer Success</title></head><body>      <h1 style="color: rgb(7, 201, 7);" title="success">Funds transfer successfull</h1><article>you can close this window now</article></body></html>';
+    res.status(200).send(str.trim())
 })
 var tokenGenerator =  ()=>{
     var h
