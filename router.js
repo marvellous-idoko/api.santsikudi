@@ -171,7 +171,7 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
                     "currency": "NGN",
                     "locale": "en_AU",
                     "orderInfo": '255s353',
-                    "returnUrl":"http://localhost:3000/fundsTransfer"
+                    "returnUrl":"https://api-sansti-kudi.herokuapp.com/fundsTransfer"
                 },
                 "merchantDetails": {
                     "accessCode": "79742570",
