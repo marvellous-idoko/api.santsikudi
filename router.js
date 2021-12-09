@@ -121,6 +121,89 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
 }).get('/loanDet/:id', async (req, res) => {
     var k = await loan.find({ loanId: req.params.id })
     res.json(k)
+}).get('/offerDet/:id', async (req, res) => {
+    var k = await offer.find({ loanId: req.params.id })
+    res.json(k)
+}).get('/accOffer/:idOfRec/:loanId',async(req,res)=>{
+    var d = await loan.findOne({ loanId: req.params.loanId })
+    d.accepted = true
+    await d.save()
+    var i = await offer.findOne({loanId: req.params.loanId})
+    i.accepted = true
+    await i.save()
+    res.json({code:1,msg:"congrats offer successfully accepted"})
+    // var u  = await user.findOne({id:req.params.idOfRec})
+    // u.numOfLoanRec = Math.floor(parseInt(u.numOfLoanRec) + 1) 
+    // await u.save()
+}).get('/rejOffer/:idOfRec/:loanId',async(req,res)=>{
+    var d = await loan.findOne({ loanId: req.params.loanId })
+    d.offered = false
+    d.VCOffer = null
+    await d.save()
+    var i = await offer.findOne({loanId: req.params.loanId})
+    i.accepted = false
+    await i.save()
+    
+    // var u  = await user.findOne({id:req.params.idOfRec})
+    // u.numOfLoanRej = Math.floor(parseInt(u.numOfLoanRej) + 1) 
+    // await u.save()
+    res.json({code:1,msg:"loan sucessfully rejected"})
+}).get('/fundLoan/:loanId',async(req,res)=>{
+
+    var lo = await loan.findOne({loanId:req.params.loanId}) 
+    tokenGenerator().then(t=>{
+        var opons = {
+            'method': 'POST',
+            // 'url': 'https://developer.ecobank.com/corporateapi/merchant/Signature',
+            // 'url': 'https://fsi.ng/api/eco/corporateapi/merchant/card',
+            'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
+            'headers': { 
+                'Authorization': JSON.parse(t.body).token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': 'developer.ecobank.com',
+            },
+            body: JSON.stringify({
+                "paymentDetails": {
+                    "requestId": req.params.loanId,
+                    "productCode": "GMT112",
+                    "amount": lo.amount,
+                    "currency": "NGN",
+                    "locale": "en_AU",
+                    "orderInfo": '255s353',
+                    "returnUrl":"http://localhost:3000/fundsTransfer"
+                },
+                "merchantDetails": {
+                    "accessCode": "79742570",
+                    "merchantID": "ETZ001",
+                    "secureSecret": "sdsffd"
+                },
+                // "secureHash":"85dc50e24f6f36850f48390be3516c518acdc427c5c5113334c1c3f0ba122cdd37b06a10b82f7ddcbdade8d8ab92165e25ea4566f6f8a7e50f3c9609d8ececa4"
+                "secureHash": "7f137705f4caa39dd691e771403430dd23d27aa53cefcb97217927312e77847bca6b8764f487ce5d1f6520fd7227e4d4c470c5d1e7455822c8ee95b10a0e9855"
+            })
+        };
+        request(opons, function (error, response) {
+            if (error) throw new Error(error);
+            else
+            {
+                res.json(JSON.parse(response.body))
+                // console.log(JSON.parse(response.body));
+            }
+
+        });
+    })
+}).get('/fundsTransfer',async(req,res)=>{
+    // https://flipcon.netlify.app/payloan/4619984095?vpc_3DSECI=02&vpc_3DSXID=%2B57yQ3%2B5GkF4eGKADpsi6A9YYaM%3D&vpc_3DSenrolled=Y&vpc_3DSstatus=Y&vpc_AVSResultCode=Unsupported&vpc_AcqAVSRespCode=Unsupported&vpc_AcqCSCRespCode=M&vpc_AcqResponseCode=00&vpc_Amount=120000&vpc_AuthorizeId=288287&vpc_BatchNo=20211210&vpc_CSCResultCode=M&vpc_Card=MC&vpc_Command=pay
+    // &vpc_Currency=NGN&vpc_Locale=en_AU&vpc_MerchTxnRef=4619984095
+    // &vpc_Merchant=ETZ001&vpc_Message=Approved&
+    // vpc_OrderInfo=255s353&vpc_ReceiptNo=134408000743
+    // &vpc_SecureHash=DB2E78CAB3A4831BC45A2CF7E460098DDFC7F69878A44ECBAF52A875C12CC3DD&
+    // vpc_SecureHashType=SHA256&vpc_TransactionNo=10005905209&vpc_TxnResponseCode=0&vpc_VerSecurityLevel=05&vpc_VerStatus=Y
+    // &vpc_VerToken=jHyn%2B7YFi1EUAREAAAAvNUe6Hv8%3D&vpc_VerType=3DS&vpc_Version=1
+    
+    let id =  req.query.vpc_MerchTxnRef
+    let msg = req.query.vpc_Message
+    console.info( msg + "  97 " + id)
 })
 var tokenGenerator =  ()=>{
     var h
@@ -141,6 +224,8 @@ var tokenGenerator =  ()=>{
     // });
 }
 router.post('/loan', async (req, res) => {
+   
+   console.info(req.body)
     var k = new loan({ 
         reason: req.body.a.reason,
         summary: req.body.a.summary,
@@ -148,51 +233,54 @@ router.post('/loan', async (req, res) => {
         duration: req.body.a.duration,
         amount: req.body.a.amount,
         dateOfRequest: new Date(),
-        aboutBusiness: req.body.abtBiz,
-        acctId: req.body.acctId,
+        aboutBusiness: req.body.b.abtBiz,
+        acctId: req.body.b.account_no,
+        ind: req.body.b.industry,
+        gender:req.body.b.gender,
+        size:req.body.b.size,
         loanId: Math.floor(Math.random() * 10000000000),
         views: 0
     })
     p = await k.save()
     res.json(p)
 }).post('/jk', async (req, res) => {
-    tokenGenerator().then(t=>{
-        var opons = {
-            'method': 'POST',
-            'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
-            'headers': { 
-                'Authorization': t.body.slice(41,t.body.length - 2),
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Origin': 'developer.ecobank.com'
-            },
-            body: JSON.stringify({
-                "paymentDetails": {
-                    "requestId": "4466",
-                    "productCode": "GMT112",
-                    "amount": "50035",
-                    "currency": "NGN",
-                    "locale": "en_AU",
-                    "orderInfo": "255s353",
-                    "returnUrl": "https://unifiedcallbacks.com/corporateclbkservice/callback/qr"
-                },
-                "merchantDetails": {
-                    "accessCode": "79742570",
-                    "merchantID": "ETZ001",
-                    "secureSecret": "sdsffd"
-                },
-                // "secureHash":"85dc50e24f6f36850f48390be3516c518acdc427c5c5113334c1c3f0ba122cdd37b06a10b82f7ddcbdade8d8ab92165e25ea4566f6f8a7e50f3c9609d8ececa4"
-                "secureHash": "7f137705f4caa39dd691e771403430dd23d27aa53cefcb97217927312e77847bca6b8764f487ce5d1f6520fd7227e4d4c470c5d1e7455822c8ee95b10a0e9855"
-            })
+    // tokenGenerator().then(t=>{
+    //     var opons = {
+    //         'method': 'POST',
+    //         'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
+    //         'headers': { 
+    //             'Authorization': t.body.slice(41,t.body.length - 2),
+    //             'Content-Type': 'application/json',
+    //             'Accept': 'application/json',
+    //             'Origin': 'developer.ecobank.com'
+    //         },
+    //         body: JSON.stringify({
+    //             "paymentDetails": {
+    //                 "requestId": "4466",
+    //                 "productCode": "GMT112",
+    //                 "amount": "50035",
+    //                 "currency": "NGN",
+    //                 "locale": "en_AU",
+    //                 "orderInfo": "255s353",
+    //                 "returnUrl": "https://unifiedcallbacks.com/corporateclbkservice/callback/qr"
+    //             },
+    //             "merchantDetails": {
+    //                 "accessCode": "79742570",
+    //                 "merchantID": "ETZ001",
+    //                 "secureSecret": "sdsffd"
+    //             },
+    //             // "secureHash":"85dc50e24f6f36850f48390be3516c518acdc427c5c5113334c1c3f0ba122cdd37b06a10b82f7ddcbdade8d8ab92165e25ea4566f6f8a7e50f3c9609d8ececa4"
+    //             "secureHash": "7f137705f4caa39dd691e771403430dd23d27aa53cefcb97217927312e77847bca6b8764f487ce5d1f6520fd7227e4d4c470c5d1e7455822c8ee95b10a0e9855"
+    //         })
     
-        };
+    //     };
     
-        request(opons, function (error, response) {
-            if (error) throw new Error(error);
-            console.log(response.body);
-        });
-    })
-    console.info("pp")
+    //     request(opons, function (error, response) {
+    //         if (error) throw new Error(error);
+    //         console.log(response.body);
+    //     });
+    // })
+    // console.info("pp")
     // var options = {
     //     'method': 'GET',
     //     'url': 'https://fsi-core-dev.inits.dev/api/sterling/TransferAPIs/api/Spay/InterbankNameEnquiry?Referenceid=01&RequestType=01&Translocation=01&ToAccount=0037514056&destinationbankcode=000001',
@@ -348,6 +436,44 @@ router.post('/loan', async (req, res) => {
         //     console.log(response.header+"header");
         // });
     }
+//     var request = require('request');
+var options = {
+  'method': 'GET',
+  'url': 'https://fsi.ng/api/sterling/billpaymentapi/api/Spay/GetBillerPmtItemsRequest?Referenceid=01&RequestType=01&Translocation=01&Bvn=1937247024021&billerid=01',
+  'headers': {
+    'Sandbox-Key': '4NN3rMeZHKPw8j4K32PxQ74nq0hCXIWZ1635258124',
+    'Ocp-Apim-Subscription-Key': 't',
+    'Content-Type': 'application/json'
+  }
+};
+request(options, function (error, response) {
+  if (error) throw new Error(error);
+  console.log(response.body);
+});
+
+sterling.Account.InterbankTransferReq({
+    sandbox_key: sandboxKey,
+    payload: {
+        Referenceid: sTrefId,
+        RequestType: sTrefTyp,
+        Translocation: sTtransLoc,
+        ToAccount: '1222',
+        Destinationbankcode: '01',
+        SessionID: '01',
+        FromAccount: req.params.acctNo,
+        Amount: req.params.amt,
+        NEResponse: '01',
+        BenefiName: 'Adrian Daniels',
+        PaymentReference: '01',
+        OriginatorAccountName: 'Paul Gambia',
+        translocation: '01'
+    },
+    sterlingHeader
+}).then(resp => {
+    res.json(resp)
+}).catch(e => {
+    console.info(e);
+})
 }).post('/payloan/:id',async (req,res)=>{
 //     ha = await loan.findOne({loanId:req.params.id})
 //     var interest = parseFloat(ha.amount) * parseFloat(ha.intRate)
@@ -392,34 +518,96 @@ router.post('/loan', async (req, res) => {
     })
     var hy = '{"response_code":200,"response_message":"success","response_content":"https://migs-mtf.mastercard.com.au/vpcpay?vpc_AccessCode=79742570&vpc_Amount=50035&vpc_Version=1&vpc_MerchTxnRef=4466&vpc_OrderInfo=255s353&vpc_Command=pay&vpc_Currency=NGN&vpc_Merchant=ETZ001&vpc_Locale=en_AU&vpc_ReturnURL=https%3A%2F%2Funifiedcallbacks.com%2Fcorporateclbkservice%2Fcallback%2Fqr&vpc_SecureHash=9037D4B97CE9508D16DCC69D1DAE46F3533C996351ED96AC05638CBF323BE243&vpc_SecureHashType=SHA256","response_timestamp":"2021-10-03T01:59:31.722"}'
     // console.info("pp")
-})
-
-router.post('/submitOffer', async (req, res) => {
+}).post('/trgsearch',async(req,res)=>{
+        console.info(req.body)
+         var d = await loan.find(req.body)
+         res.json(d)
+}).post('/submitOffer', async (req, res) => {
     var d = await loan.findOne({ loanId: req.body.offer.id })
+   console.info(req.body)
     d.VCOffer = {
         intRate: req.body.offer.intRate,
         amount: req.body.offer.amt,
         msg: req.body.offer.msg,
-        duration: req.body.offer.years,
-        acctId: req.body.id
-    }
+        duration: req.body.offer.duration,
+        acctIdOfFinancier: req.body.id
+    }   
     d.offered = true
     d.views = Math.ceil(d.views + 1)
     await d.save()
     // console.log(await d.save())
-    const f = new offer({
+
+    // Save offer to offer Database
+    var f = new offer({
         dateOfoffer: new Date(),
         loanId: req.body.offer.id,
         amt: req.body.offer.amt,
         intRate: req.body.offer.intRate,
-        years: req.body.offer.years,
+        duration: req.body.offer.duration,
         id: req.body.id,
-        idofrecepient: req.body.offer.idd
+        idofrecepient: req.body.offer.idd,
+        offerSummary:req.body.offer.msg
     })
     res.json(await f.save())
+}).post('/editProp',async(req,res)=>{
+    var d = await loan.findOne({ loanId: req.body.offer.id })
+    console.info(req.body)
+     d.VCOffer = {
+         intRate: req.body.offer.intRate,
+         amount: req.body.offer.amt,
+         msg: req.body.offer.msg,
+         duration: req.body.offer.duration,
+         acctIdOfFinancier: req.body.id
+     }   
+     d.offered = true
+     d.views = Math.ceil(d.views + 1)
+     await d.save()
+     var f = await offer.findOne({loanId:req.body.offer.id})
+     f.amt = req.body.offer.amt
+     f.duration = req.body.offer.duration
+     f.intRate =  req.body.offer.intRate
+     f.offerSummary = req.body.offer.msg
+    //  loanId: req.body.offer.id,
+    //     amt: req.body.offer.amt,
+    //     intRate: req.body.offer.intRate,
+    //     duration: req.body.offer.duration,
+    //     id: req.body.id,
+    //     idofrecepient: req.body.offer.idd,
+    //     offerSummary:req.body.offer.msg
+     f.save()
+     res.json({code:1})
 })
 router.get('/getOffers/:id', async (req, res) => {
     res.json(await offer.find({ id: req.params.id }))
+}).get('/opo',(req,res)=>{
+    // var request = require('request');
+var options = {
+  'method': 'GET',
+  'url': 'https://fsi.ng/api/sterling/billpaymentapi/api/Spay/GetBillerPmtItemsRequest?Referenceid=01&RequestType=01&Translocation=01&Bvn=1937247024021&billerid=01',
+  'headers': {
+    'Sandbox-Key': '3f81b44afa59a7737ffd448d458aef99',
+    'Ocp-Apim-Subscription-Key': 't',
+    'Content-Type': 'application/json',
+    'Appid':'69',
+    'ipval':'0'
+  },
+  'params':{
+      'Referenceid':'01',
+        'RequestType':'01',
+        'Translocation':'01',
+        'Bvn':'aziUkQyWgW1Zq45dmJMoZNAkFrnSepNL1633588985',
+        'billerid':'01'
+  }
+}
+request(options, function (error, response) {
+  if (error) throw new Error(error);
+  console.log(response.body);
+});
+}).get('/incrViews/:id',async(req,res)=>{
+ var d = await loan.findOne({loanId:req.params.id})
+ console.info(parseInt(d.views) + 1)
+ d.views = Math.ceil(d.views + 1)
+ d.save()  
 })
 router.get('/nvny/:id', async (req, res) => {
     var s = await offer.findOne({ loanId: req.params.id })
@@ -430,14 +618,16 @@ router.get('/nvny/:id', async (req, res) => {
     d.offered = false
     d.save()
     res.json({ a: 'offer rejected' })
-}).get('/accOffer/:id', async (req, res) => {
-    var s = await offer.findOne({ loanId: req.params.id })
-    s.accepted = true;
-    s.save()
-    var d = await loan.findOne({ loanId: req.params.id })
-    d.save()
-    res.json({ a: 'offer accepted' })
-}).get('/nameEnq/:acctNo', (req, res) => {
+})
+// .get('/accOffer/:id', async (req, res) => {
+//     var s = await offer.findOne({ loanId: req.params.id })
+//     s.accepted = true;
+//     s.save()
+//     var d = await loan.findOne({ loanId: req.params.id })
+//     d.save()
+//     res.json({ a: 'offer accepted' })
+// })
+router.get('/nameEnq/:acctNo', (req, res) => {
     nameEnquiry(req.params.acctNo).then(e => {
         res.json(e['data'])
     })
@@ -2039,8 +2229,8 @@ router.post('/register', (req, res, next) => {
         bizAddress:req.body.bizAddress,
         bizContact:req.body.bizContact,
         bizEmail:req.body.bizEmail,
-        sizeOfBiz:req.body.sizeOfBiz
-
+        sizeOfBiz:req.body.sizeOfBiz,
+        gender:req.body.sex
     });
     var up = __dirname + '/images/' + 'FLIPCON_'+Math.floor(Math.random() * 10000000000) + '.png';
     let a = req.files.photo

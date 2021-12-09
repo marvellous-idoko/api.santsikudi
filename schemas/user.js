@@ -14,6 +14,11 @@ const user = mongoose.Schema({
         type: String,
         required: true
     },
+    gender: {
+        type: String,
+        required: true
+    },
+
     acctBal: {
         type: Number,
         required: true

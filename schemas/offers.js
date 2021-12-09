@@ -3,34 +3,38 @@ const mongoose = require('mongoose');
 const offer = mongoose.Schema({
     dateOfoffer: {
         type: Date,
-        required: true
+        // required: true
     },
     loanId:{
         type:String,
-        required: true
+        // required: true
     },
     amt:{
         type:Number,
-        required: true
+        // required: true
     },
     intRate:{
         type:String,
-        required: true
+        // required: true
     },
-    years:{
+    duration:{
         type:String,
-        required: true
+        // required: true
     },
     idofrecepient:{
         type: String,
-        required: true
+        // required: true
     },
     id:{
         type: String,
-        required: true
+        // required: true
     },
     accepted:{
         type:Boolean
+    },
+    offerSummary:{
+        type: String,
+        // required: true
     }
     
 })

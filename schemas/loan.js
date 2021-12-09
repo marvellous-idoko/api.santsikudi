@@ -5,11 +5,23 @@ const loan = mongoose.Schema({
         type: String,
         required: true
     },
-    aboutBusiness:{
+    nameOfOrg: {
+        type: String,
+    },
+    size: {
+        type: String,
+    }, 
+    gender: {
+        type: String,
+    },
+    ind: {
+        type: String,
+    },
+    aboutBusiness: {
         type: String,
         required: true
-    }, 
-    summary:{
+    },
+    summary: {
         type: String,
         required: true
     },
@@ -38,13 +50,13 @@ const loan = mongoose.Schema({
         duration: {
             type: String
         },
-        acctId:{
+        acctIdOfFinancier: {
             type: String
         }
     },
     dateOfRequest: {
         type: Date,
-        required:true
+        required: true
     },
     paid: {
         type: Boolean
@@ -60,15 +72,15 @@ const loan = mongoose.Schema({
     },
     loanId: {
         type: String,
-        required:true
+        required: true
     },
     acctId: {
         type: String,
-        required:true
+        required: true
     },
     views: {
         type: Number,
-        required:true
+        required: true
     }
 });
 const loanr = module.exports = mongoose.model('loan', loan);
