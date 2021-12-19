@@ -5,14 +5,15 @@ var mongoose = require("mongoose");
 var app = express();
 var route = require('./router')
 
-const
- url = "mongodb+srv://Sparrow:polio2929@insurebeta.1vplu.mongodb.net/Sparrow?retryWrites=true&w=majority";
-// mongoose.connect('mongodb://localhost:27017/',{useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.connect(url , {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+// const url = "mongodb+srv://Sparrow:polio2929@insurebeta.1vplu.mongodb.net/Sparrow?retryWrites=true&w=majority";
+mongoose.connect('mongodb://localhost:27017/',{useNewUrlParser: true, useUnifiedTopology: true })
 
+
+// mongoose.connect(url , {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+//   });
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 mongoose.connection.on('connected', ()=>{
     
     console.log("connected to DB");
