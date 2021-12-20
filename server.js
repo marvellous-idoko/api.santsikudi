@@ -12,7 +12,6 @@ const url = "mongodb+srv://Sparrow:polio2929@insurebeta.1vplu.mongodb.net/Sparro
 mongoose.connect(url , {useNewUrlParser: true,    useUnifiedTopology: true});
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 mongoose.connection.on('connected', ()=>{
-    
     console.log("connected to DB");
 });
 mongoose.connection.on('error',(err)=>{

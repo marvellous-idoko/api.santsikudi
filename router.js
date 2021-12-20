@@ -196,9 +196,9 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
 }).get('/fundsTransfer',async(req,res)=>{
     // https://flipcon.netlify.app/payloan/4619984095?vpc_3DSECI=02&
     // vpc_3DSXID=%2B57yQ3%2B5GkF4eGKADpsi6A9YYaM%3D&vpc_3DSenrolled=Y&vpc_3DSstatus=Y&
-    vpc_AVSResultCode=Unsupported&vpc_AcqAVSRespCode=Unsupported&vpc_AcqCSCRespCode=M&
-    vpc_AcqResponseCode=00&vpc_Amount=120000&vpc_AuthorizeId=288287&
-    vpc_BatchNo=20211210&vpc_CSCResultCode=M&vpc_Card=MC&vpc_Command=pay
+    // vpc_AVSResultCode=Unsupported&vpc_AcqAVSRespCode=Unsupported&vpc_AcqCSCRespCode=M&
+    // vpc_AcqResponseCode=00&vpc_Amount=120000&vpc_AuthorizeId=288287&
+    // vpc_BatchNo=20211210&vpc_CSCResultCode=M&vpc_Card=MC&vpc_Command=pay
     // &vpc_Currency=NGN&vpc_Locale=en_AU&vpc_MerchTxnRef=4619984095
     // &vpc_Merchant=ETZ001&vpc_Message=Approved&
     // vpc_OrderInfo=255s353&vpc_ReceiptNo=134408000743
@@ -210,7 +210,7 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
     let a = await loan.findOne({loanId:req.query.vpc_MerchTxnRef})
     let b = await offer.findOne({loanId:req.query.vpc_MerchTxnRef})
     a.paid = true
-    let c = await userSchema.findOne({id: a['acctId']})
+    let c = await userSchema.findOne({account_no: a['acctId']})
     c.acctBal = parseInt(a['amount']) + c['acctBal']
     c.save()
     b.paid = true
@@ -663,6 +663,22 @@ request(options, function (error, response) {
     d.offered = false
     d.save()
     res.json({ a: 'offer rejected' })
+}).get('/noOfLoansCompleted/:id', async(req,res)=>{
+    res.json(( await offer.find({id:req.params.id,paid:true,repaid:true})).length)
+})
+.get('/noOfLoansUnpaid/:id', async(req,res)=>{
+    res.json(( await offer.find({id:req.params.id,paid:true,repaid:undefined || null})).length)
+}).get('/noOfProposals/:id', async(req,res)=>{
+    res.json(( await offer.find({id:req.params.id})).length)
+}).get('/amountInvested/:id', async(req,res)=>{
+    let a = await offer.find({id:req.params.id,paid:true})
+   let b = 0;
+    a.forEach((el)=>{
+    b = b + parseInt( el['amt'])
+   })
+   res.json(b)
+}).get('/noOfLoansCompleted/:id', async(req,res)=>{
+    res.json(( await offer.find({id:req.params.id,repaid:true})).length)
 })
 // .get('/accOffer/:id', async (req, res) => {
 //     var s = await offer.findOne({ loanId: req.params.id })
