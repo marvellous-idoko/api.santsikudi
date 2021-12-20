@@ -151,14 +151,16 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
 }).get('/fundLoan/:loanId',async(req,res)=>{
 
     var lo = await loan.findOne({loanId:req.params.loanId}) 
-    tokenGenerator().then(t=>{
+ tokenGenerator()
+    .then(
+               t=>{
+        console.log(t.body)
         var opons = {
             'method': 'POST',
-            // 'url': 'https://developer.ecobank.com/corporateapi/merchant/Signature',
             // 'url': 'https://fsi.ng/api/eco/corporateapi/merchant/card',
             'url': 'https://developer.ecobank.com/corporateapi/merchant/card',
             'headers': { 
-                'Authorization': JSON.parse(t.body).token,
+                'Authorization':JSON.parse(t.body).token,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Origin': 'developer.ecobank.com',
@@ -189,11 +191,14 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
                 res.json(JSON.parse(response.body))
                 // console.log(JSON.parse(response.body));
             }
-
         });
     })
 }).get('/fundsTransfer',async(req,res)=>{
-    // https://flipcon.netlify.app/payloan/4619984095?vpc_3DSECI=02&vpc_3DSXID=%2B57yQ3%2B5GkF4eGKADpsi6A9YYaM%3D&vpc_3DSenrolled=Y&vpc_3DSstatus=Y&vpc_AVSResultCode=Unsupported&vpc_AcqAVSRespCode=Unsupported&vpc_AcqCSCRespCode=M&vpc_AcqResponseCode=00&vpc_Amount=120000&vpc_AuthorizeId=288287&vpc_BatchNo=20211210&vpc_CSCResultCode=M&vpc_Card=MC&vpc_Command=pay
+    // https://flipcon.netlify.app/payloan/4619984095?vpc_3DSECI=02&
+    // vpc_3DSXID=%2B57yQ3%2B5GkF4eGKADpsi6A9YYaM%3D&vpc_3DSenrolled=Y&vpc_3DSstatus=Y&
+    vpc_AVSResultCode=Unsupported&vpc_AcqAVSRespCode=Unsupported&vpc_AcqCSCRespCode=M&
+    vpc_AcqResponseCode=00&vpc_Amount=120000&vpc_AuthorizeId=288287&
+    vpc_BatchNo=20211210&vpc_CSCResultCode=M&vpc_Card=MC&vpc_Command=pay
     // &vpc_Currency=NGN&vpc_Locale=en_AU&vpc_MerchTxnRef=4619984095
     // &vpc_Merchant=ETZ001&vpc_Message=Approved&
     // vpc_OrderInfo=255s353&vpc_ReceiptNo=134408000743
@@ -201,33 +206,54 @@ router.get('/verifyBVN/:bvn/:id', async (req, res) => {
     // vpc_SecureHashType=SHA256&vpc_TransactionNo=10005905209&vpc_TxnResponseCode=0&vpc_VerSecurityLevel=05&vpc_VerStatus=Y
     // &vpc_VerToken=jHyn%2B7YFi1EUAREAAAAvNUe6Hv8%3D&vpc_VerType=3DS&vpc_Version=1
     
-    let id =  req.query.vpc_MerchTxnRef
     let msg = req.query.vpc_Message
     let a = await loan.findOne({loanId:req.query.vpc_MerchTxnRef})
+    let b = await offer.findOne({loanId:req.query.vpc_MerchTxnRef})
     a.paid = true
+    let c = await userSchema.findOne({id: a['acctId']})
+    c.acctBal = parseInt(a['amount']) + c['acctBal']
+    c.save()
+    b.paid = true
+    a.save()
+    b.save()
     let str = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Funds Transfer Success</title></head><body>      <h1 style="color: rgb(7, 201, 7);" title="success">Funds transfer successfull</h1><article>you can close this window now</article></body></html>';
     res.status(200).send(str.trim())
 })
-var tokenGenerator =  ()=>{
-    var h
+var tokenGenerator = async ()=>{
+   return await axios.post('https://developer.ecobank.com/corporateapi/user/token',{  'headers': {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Origin': 'developer.ecobank.com',
+    },
+    body: '{ "userId": "iamaunifieddev103",  "password": "$2a$10$Wmame.Lh1FJDCB4JJIxtx.3SZT0dP2XlQWgj9Q5UAGcDLpB0yRYCC"}'
+})
     var options = {
         'method': 'POST',
+        // 'url':'https://fsi.ng/api/eco/corporateapi/user/token',
         'url': 'https://developer.ecobank.com/corporateapi/user/token',
         'headers': {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Origin': 'developer.ecobank.com'
+            'Origin': 'developer.ecobank.com',
+            // 'Sandbox-Key': '4NN3rMeZHKPw8j4K32PxQ74nq0hCXIWZ1635258124',
         },
         body: '{ "userId": "iamaunifieddev103",  "password": "$2a$10$Wmame.Lh1FJDCB4JJIxtx.3SZT0dP2XlQWgj9Q5UAGcDLpB0yRYCC"}'
     };
-    return request(options)
+    googleMapApiKey=""
+    // return request(options)
  
     // , async function(error, response) {
     //     if (error) throw new Error(error);
     // });
 }
+
+// {
+//     "response_code": 200,
+//     "response_message": "success",
+//     "response_content": "BwZdR8Y2JtiCEfi/EkFWIQsKDhIjqe02OIt8SXbLJ7M=&2021-11-03T12:30:55Z",
+//     "response_timestamp": "2021-11-03T18:31:39.508"
+//   }
 router.post('/loan', async (req, res) => {
-   
    console.info(req.body)
     var k = new loan({ 
         reason: req.body.a.reason,
@@ -513,7 +539,7 @@ sterling.Account.InterbankTransferReq({
             })
         };
         request(opons, function (error, response) {
-            if (error) throw new Error(error);
+            if (error) throw new Error(error + "omncmo");
             console.log(response.body);
             res.json(response.body.slice(response.body.search('https://')).slice(0,response.body.slice(response.body.search('https://')).search('"')))
 
@@ -580,8 +606,25 @@ sterling.Account.InterbankTransferReq({
      f.save()
      res.json({code:1})
 })
-router.get('/getOffers/:id', async (req, res) => {
-    res.json(await offer.find({ id: req.params.id }))
+gh = ()=>{
+var pl = {a:12,c:89}
+var ji = {d:'fg'}
+var hu = {a:'lol',b:1,...pl,c:{'love':'12'},e:"gaff",d:"vat",...ji}
+console.log(typeof hu)
+console.log(hu)
+}
+gh()
+
+
+
+
+const props = ['name', 'email', 'tel', 'address', 'icon'];
+const opts = {multiple: true};
+
+router.get('/getMyLoans/:id', async (req, res) => {
+    res.json(await offer.find({ id: req.params.id,paid:true }))
+}).get('/getOffers/:id', async (req, res) => {
+    res.json(await offer.find({ id: req.params.id,paid:undefined }))
 }).get('/opo',(req,res)=>{
     // var request = require('request');
 var options = {
@@ -611,8 +654,7 @@ request(options, function (error, response) {
  console.info(parseInt(d.views) + 1)
  d.views = Math.ceil(d.views + 1)
  d.save()  
-})
-router.get('/nvny/:id', async (req, res) => {
+}).get('/nvny/:id', async (req, res) => {
     var s = await offer.findOne({ loanId: req.params.id })
     s.accepted = false;
     s.save()
@@ -2382,4 +2424,3 @@ router.post('/transferFunds/:account_no', (req, res) => {
 })
 
 module.exports = router;
-

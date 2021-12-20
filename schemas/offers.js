@@ -29,14 +29,19 @@ const offer = mongoose.Schema({
         type: String,
         // required: true
     },
+    paid:{
+        type:Boolean
+    },
     accepted:{
         type:Boolean
     },
     offerSummary:{
         type: String,
         // required: true
+    },
+    repaid:{
+        type:Boolean
     }
-    
 })
 
 const offerr = module.exports = mongoose.model('offer', offer);
